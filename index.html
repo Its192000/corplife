@@ -190,6 +190,19 @@ button,.tile,.talk-opt{touch-action:manipulation}
 .choice{text-align:left;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface2);color:var(--ink);font-size:14px;line-height:1.45;cursor:pointer}
 .choice:hover{border-color:var(--ink)}
 
+/* ===== Daily route strip ===== */
+.qstrip{display:flex;gap:5px;overflow-x:auto;margin-top:7px;padding:2px 2px 3px;scrollbar-width:none}
+.qstrip::-webkit-scrollbar{display:none}
+.qcell{flex:none;min-width:54px;display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 5px 6px;border-radius:8px;border:0;background:rgba(255,255,255,.08);color:#C9D4EA;cursor:pointer;box-shadow:inset 0 -3px 0 var(--dc)}
+.qcell .qi{font-size:16px;line-height:1.15}
+.qcell .ql{font-size:9.5px;font-weight:700;white-space:nowrap}
+.qcell.done{opacity:.45}
+.qcell.done .qi{color:#7EE09A;font-weight:800}
+.qcell.cur{background:var(--g-orange);color:#3A2400;box-shadow:inset 0 -3px 0 var(--dc),0 0 0 2px #fff}
+.room.next .hl{opacity:.6;animation:hlpulse 1.6s ease-in-out infinite}
+.room.target .hl{opacity:1;animation:none}
+@keyframes hlpulse{50%{opacity:.2}}
+
 /* ===== Talk ===== */
 
 .talk-head{display:flex;gap:12px;align-items:center;margin-bottom:12px}
@@ -403,6 +416,7 @@ button,.tile,.talk-opt{touch-action:manipulation}
       <div class="row"><h2><span class="dot" aria-hidden="true"></span><span id="roomName">Phòng CTS &amp; Partnership</span></h2><div class="rstats" id="roomStats"></div><button type="button" class="collapse" id="sheetToggle" aria-expanded="true" aria-label="Thu gọn bảng điều khiển">▾</button></div>
       <div class="prog"><i id="dayBar"></i></div>
       <div class="proglbl" id="dayLbl"></div>
+      <div class="qstrip" id="qstrip"></div>
     </div>
     <div class="detail" id="detail" aria-live="polite"></div>
     <div class="tiles" id="tiles"></div>
@@ -482,6 +496,7 @@ button,.tile,.talk-opt{touch-action:manipulation}
       <div class="row"><h2><span class="dot" aria-hidden="true"></span><span id="roomName">CTS &amp; Partnership</span></h2><div class="rstats" id="roomStats"></div><button type="button" class="collapse" id="sheetToggle" aria-expanded="true" aria-label="Collapse the control panel">▾</button></div>
       <div class="prog"><i id="dayBar"></i></div>
       <div class="proglbl" id="dayLbl"></div>
+      <div class="qstrip" id="qstrip"></div>
     </div>
     <div class="detail" id="detail" aria-live="polite"></div>
     <div class="tiles" id="tiles"></div>
@@ -564,7 +579,7 @@ const DEPTS = [
   { id:'hr',        name:'HR',          color:'var(--d-hr)',        desc:'Hồ sơ nhân sự, CTV',        props:['🗂️','🖥️','👩‍🦰','☕','📋','🧑'] },
   { id:'partner',   name:'CTS & Partnership', color:'var(--d-partner)',   desc:'Bàn làm việc của bạn',      props:[] },
   { id:'pantry',    name:'Pantry', color:'#C07A3A', desc:'', props:[] },
-  { id:'boss',      name:'Phòng Giám đốc', color:'#B8902E', desc:'', props:[] },
+  { id:'boss',      name:'Giám đốc', color:'#B8902E', desc:'', props:[] },
 ];
 
 const TASKS_BY_LEVEL = {
@@ -597,6 +612,7 @@ const TASKS_BY_LEVEL = {
 };
 const DAY_QUOTA=10, DAY_SECONDS=300;
 const TX={
+  bossShort:'Giám đốc', 
   winToast:(r,n,met)=>met?`✅ +${r} coin. Đạt chỉ tiêu ${DAY_QUOTA} việc, ngày công được tính!`:`✅ +${r} coin. Xong việc ${n}/${DAY_QUOTA}, việc mới đã tới.`,
   dayEndKicker:n=>`Kết thúc ngày ${n}`,
   dayEndTitle:'Hết giờ làm rồi!',
@@ -911,7 +927,8 @@ function taskById(id){ return levelTasks(S.level).find(t=>t.id===id); }
 
 function ensureDay(){
   if(S.day && S.day.no===S.dayNo) return false;
-  S.day={ no:S.dayNo, date:'D'+S.dayNo, tasks:pickTasks(), done:{}, doneCount:0, counted:false, sabotage:false, acts:{}, bought:0, alerts:{}, talked:{} };
+  const q=buildQueue();
+  S.day={ no:S.dayNo, date:'D'+S.dayNo, queue:q, qi:0, tasks:q.slice(0,1), done:{}, doneCount:0, counted:false, sabotage:false, acts:{}, bought:0, alerts:{}, talked:{} };
   save();
   return true;
 }
@@ -999,7 +1016,7 @@ async function onWin(t){
   S.day.doneCount=(S.day.doneCount||0)+1;
   let met=false;
   if(!S.day.counted && S.day.doneCount>=DAY_QUOTA){ S.day.counted=true; S.days++; met=true; }
-  S.day.tasks=pickTasks(t.id); S.day.done={}; sel={type:'task',id:S.day.tasks[0]};
+  S.day.qi=(S.day.qi||0)+1; S.day.tasks=[(S.day.queue&&S.day.queue[S.day.qi])||pickTasks(t.id)[0]].filter(Boolean); S.day.done={}; sel={type:'task',id:S.day.tasks[0]};
   save(); render();
   toast(TX.winToast(r,S.day.doneCount,met));
   if(shouldSabotage()) await runSabotage();
@@ -1039,7 +1056,7 @@ async function gameOver(){
 }
 function restartLevel(){
   S.days=0; S.earned=0; S.lives=MAX_LIVES; S.energy=MAX_ENERGY; S.coins=S.levelStartCoins; S.lastCounted=null; S.flags={};
-  S.day.tasks=pickTasks(); S.day.done={}; S.day.sabotage=false; S.day.alerts={}; S.day.doneCount=0; S.day.counted=false;
+  S.day.queue=buildQueue(); S.day.qi=0; S.day.tasks=S.day.queue.slice(0,1); S.day.done={}; S.day.sabotage=false; S.day.alerts={}; S.day.doneCount=0; S.day.counted=false;
   toast(`Bắt đầu lại cấp ${LEVELS[S.level].name}.`);
 }
 
@@ -1115,7 +1132,7 @@ async function promote(){
   if(!canPromote()) return;
   const nx=nextLevel();
   S.level++; S.days=0; S.earned=0; S.lives=MAX_LIVES; S.flags={}; S.levelStartCoins=S.coins;
-  S.day.tasks=pickTasks(); S.day.done={}; S.day.alerts={};
+  S.day.queue=buildQueue(); S.day.qi=0; S.day.tasks=S.day.queue.slice(0,1); S.day.done={}; S.day.alerts={};
   save(); render();
   await showModal({
     tone:'ok', kicker:'Quyết định bổ nhiệm', title:`Chúc mừng, bạn đã lên ${nx.name}!`,
@@ -1756,7 +1773,7 @@ function render(){
   $('enVal').textContent=`${S.energy}/${MAX_ENERGY}`;
   $('coinVal').textContent=S.coins;
   $('earnVal').textContent=`tích lũy ${S.earned}`;
-  renderRoomBar(); renderSheet(); renderClock();
+  renderRoomBar(); renderSheet(); renderClock(); renderQueue();
 }
 
 function renderRoomBar(){
@@ -2277,7 +2294,7 @@ function sanitizeState(o){
   if(isDate(d.date)) f.day.date=d.date;
   if(Array.isArray(d.tasks)) f.day.tasks=d.tasks.filter(t=>ids.includes(t)).slice(0,3);
   if(d.done&&typeof d.done==='object') f.day.tasks.forEach(t=>{ if(d.done[t]==='ok') f.day.done[t]='ok'; });
-  f.day.sabotage=!!d.sabotage; if(isInt(d.doneCount,0,999)) f.day.doneCount=d.doneCount; f.day.counted=d.counted===true; if(isInt(d.no,1,1e6)) f.day.no=d.no;
+  f.day.sabotage=!!d.sabotage; if(Array.isArray(d.queue)) f.day.queue=d.queue.filter(t=>ids.includes(t)).slice(0,DAY_QUOTA); if(isInt(d.qi,0,99)) f.day.qi=d.qi; if(isInt(d.doneCount,0,999)) f.day.doneCount=d.doneCount; f.day.counted=d.counted===true; if(isInt(d.no,1,1e6)) f.day.no=d.no;
   if(d.acts&&typeof d.acts==='object') ACTS.forEach(a=>{ if(isInt(d.acts[a.id],0,99)) f.day.acts[a.id]=d.acts[a.id]; });
   if(isInt(d.bought,0,99)) f.day.bought=d.bought;
   if(d.alerts&&typeof d.alerts==='object') ['ready','missing'].forEach(k=>{ if(d.alerts[k]===true) f.day.alerts[k]=true; });
@@ -2481,6 +2498,34 @@ Object.assign(MINIGAMES,{
   },
 });
 renderClock();
+
+/* ---------- Lộ trình 10 việc trong ngày, đủ các phòng ban ---------- */
+function buildQueue(){
+  const pool=levelTasks(S.level); if(!pool.length) return [];
+  const q=[];
+  ['product','marketing','gs','legal','hr','partner'].forEach(d=>{ const c=pool.filter(t=>t.dept===d); if(c.length) q.push(pick(c).id); });
+  let guard=0;
+  while(q.length<DAY_QUOTA && guard++<200){ const t=pick(pool); if(q.filter(x=>x===t.id).length<2) q.push(t.id); }
+  for(let k=0;k<30;k++){ const s=shuffle(q); if(s.every((x,i)=>i===0||x!==s[i-1])) return s; }
+  return shuffle(q);
+}
+function qShort(d){ return ({legal:'Legal',partner:'CTS&P',boss:TX.bossShort})[d.id]||d.name; }
+function renderQueue(){
+  const box=$('qstrip'); if(!box||!S.day) return;
+  box.innerHTML='';
+  const q=S.day.queue||[], qi=S.day.qi||0;
+  const cell=(t,i,st,icon)=>{ const d=deptOf(t.dept);
+    return h('button',{type:'button',class:'qcell '+st,style:`--dc:${d.color}`,title:`${i+1}. ${t.title} (${d.name})`,'aria-label':`${i+1}. ${t.title}, ${d.name}`,
+      onclick:()=>{ goRoom(roomIndex(t.dept)); if(st==='cur'){ sel={type:'task',id:t.id}; renderSheet(); } }},
+      h('span',{class:'qi','aria-hidden':'true'},icon),h('span',{class:'ql'},qShort(d))); };
+  q.forEach((id,i)=>{ const t=taskById(id); if(t) box.append(cell(t,i,i<qi?'done':i===qi?'cur':'',i<qi?'✓':t.icon)); });
+  if(qi>=q.length && S.day.tasks[0]){ const t=taskById(S.day.tasks[0]); if(t) box.append(cell(t,qi,'cur','⭐')); }
+  const cur=box.querySelector('.qcell.cur'); if(cur) box.scrollLeft=cur.offsetLeft-box.clientWidth/2+cur.offsetWidth/2;
+  document.querySelectorAll('.room.next').forEach(x=>x.classList.remove('next'));
+  const ct=S.day.tasks[0]&&taskById(S.day.tasks[0]); if(ct){ const r=$('room-'+ct.dept); if(r) r.classList.add('next'); }
+}
+if(S.day && !S.day.queue){ S.day.queue=buildQueue(); S.day.qi=0; if(S.day.queue.length) S.day.tasks=[S.day.queue[0]]; save(); }
+render();
 showHome();
 </script>
 <script type="text/plain" id="js-en">
@@ -2544,6 +2589,7 @@ const TASKS_BY_LEVEL = {
 };
 const DAY_QUOTA=10, DAY_SECONDS=300;
 const TX={
+  bossShort:'Director', 
   winToast:(r,n,met)=>met?`✅ +${r} coins. ${DAY_QUOTA}-task quota reached, today counts as a workday!`:`✅ +${r} coins. Task ${n}/${DAY_QUOTA} done, a new one is in.`,
   dayEndKicker:n=>`End of day ${n}`,
   dayEndTitle:'Time to clock out!',
@@ -2858,7 +2904,8 @@ function taskById(id){ return levelTasks(S.level).find(t=>t.id===id); }
 
 function ensureDay(){
   if(S.day && S.day.no===S.dayNo) return false;
-  S.day={ no:S.dayNo, date:'D'+S.dayNo, tasks:pickTasks(), done:{}, doneCount:0, counted:false, sabotage:false, acts:{}, bought:0, alerts:{}, talked:{} };
+  const q=buildQueue();
+  S.day={ no:S.dayNo, date:'D'+S.dayNo, queue:q, qi:0, tasks:q.slice(0,1), done:{}, doneCount:0, counted:false, sabotage:false, acts:{}, bought:0, alerts:{}, talked:{} };
   save();
   return true;
 }
@@ -2946,7 +2993,7 @@ async function onWin(t){
   S.day.doneCount=(S.day.doneCount||0)+1;
   let met=false;
   if(!S.day.counted && S.day.doneCount>=DAY_QUOTA){ S.day.counted=true; S.days++; met=true; }
-  S.day.tasks=pickTasks(t.id); S.day.done={}; sel={type:'task',id:S.day.tasks[0]};
+  S.day.qi=(S.day.qi||0)+1; S.day.tasks=[(S.day.queue&&S.day.queue[S.day.qi])||pickTasks(t.id)[0]].filter(Boolean); S.day.done={}; sel={type:'task',id:S.day.tasks[0]};
   save(); render();
   toast(TX.winToast(r,S.day.doneCount,met));
   if(shouldSabotage()) await runSabotage();
@@ -2986,7 +3033,7 @@ async function gameOver(){
 }
 function restartLevel(){
   S.days=0; S.earned=0; S.lives=MAX_LIVES; S.energy=MAX_ENERGY; S.coins=S.levelStartCoins; S.lastCounted=null; S.flags={};
-  S.day.tasks=pickTasks(); S.day.done={}; S.day.sabotage=false; S.day.alerts={}; S.day.doneCount=0; S.day.counted=false;
+  S.day.queue=buildQueue(); S.day.qi=0; S.day.tasks=S.day.queue.slice(0,1); S.day.done={}; S.day.sabotage=false; S.day.alerts={}; S.day.doneCount=0; S.day.counted=false;
   toast(`Restarting the ${LEVELS[S.level].name} level.`);
 }
 
@@ -3062,7 +3109,7 @@ async function promote(){
   if(!canPromote()) return;
   const nx=nextLevel();
   S.level++; S.days=0; S.earned=0; S.lives=MAX_LIVES; S.flags={}; S.levelStartCoins=S.coins;
-  S.day.tasks=pickTasks(); S.day.done={}; S.day.alerts={};
+  S.day.queue=buildQueue(); S.day.qi=0; S.day.tasks=S.day.queue.slice(0,1); S.day.done={}; S.day.alerts={};
   save(); render();
   await showModal({
     tone:'ok', kicker:'Promotion letter', title:`Congratulations, you’re now ${nx.name}!`,
@@ -3703,7 +3750,7 @@ function render(){
   $('enVal').textContent=`${S.energy}/${MAX_ENERGY}`;
   $('coinVal').textContent=S.coins;
   $('earnVal').textContent=`earned ${S.earned}`;
-  renderRoomBar(); renderSheet(); renderClock();
+  renderRoomBar(); renderSheet(); renderClock(); renderQueue();
 }
 
 function renderRoomBar(){
@@ -3797,7 +3844,7 @@ function playMinigame(t){
   const d=deptOf(t.dept);
   return showModal({
     wide:true, dismissible:false, actions:[],
-    kicker:`${d.name} team, ${t.diff==='hard'?'hard':'easy'} task`, title:t.title,
+    kicker:`${d.name}${['pantry','boss'].includes(d.id)?'':' team'}, ${t.diff==='hard'?'hard':'easy'} task`, title:t.title,
     body:(el,close)=>{
       const tb=h('div',{class:'timer'},h('i')); const tl=h('div',{class:'tlabel'});
       const stage=h('div',{class:'stage'});
@@ -4224,7 +4271,7 @@ function sanitizeState(o){
   if(isDate(d.date)) f.day.date=d.date;
   if(Array.isArray(d.tasks)) f.day.tasks=d.tasks.filter(t=>ids.includes(t)).slice(0,3);
   if(d.done&&typeof d.done==='object') f.day.tasks.forEach(t=>{ if(d.done[t]==='ok') f.day.done[t]='ok'; });
-  f.day.sabotage=!!d.sabotage; if(isInt(d.doneCount,0,999)) f.day.doneCount=d.doneCount; f.day.counted=d.counted===true; if(isInt(d.no,1,1e6)) f.day.no=d.no;
+  f.day.sabotage=!!d.sabotage; if(Array.isArray(d.queue)) f.day.queue=d.queue.filter(t=>ids.includes(t)).slice(0,DAY_QUOTA); if(isInt(d.qi,0,99)) f.day.qi=d.qi; if(isInt(d.doneCount,0,999)) f.day.doneCount=d.doneCount; f.day.counted=d.counted===true; if(isInt(d.no,1,1e6)) f.day.no=d.no;
   if(d.acts&&typeof d.acts==='object') ACTS.forEach(a=>{ if(isInt(d.acts[a.id],0,99)) f.day.acts[a.id]=d.acts[a.id]; });
   if(isInt(d.bought,0,99)) f.day.bought=d.bought;
   if(d.alerts&&typeof d.alerts==='object') ['ready','missing'].forEach(k=>{ if(d.alerts[k]===true) f.day.alerts[k]=true; });
@@ -4428,6 +4475,34 @@ Object.assign(MINIGAMES,{
   },
 });
 renderClock();
+
+/* ---------- Lộ trình 10 việc trong ngày, đủ các phòng ban ---------- */
+function buildQueue(){
+  const pool=levelTasks(S.level); if(!pool.length) return [];
+  const q=[];
+  ['product','marketing','gs','legal','hr','partner'].forEach(d=>{ const c=pool.filter(t=>t.dept===d); if(c.length) q.push(pick(c).id); });
+  let guard=0;
+  while(q.length<DAY_QUOTA && guard++<200){ const t=pick(pool); if(q.filter(x=>x===t.id).length<2) q.push(t.id); }
+  for(let k=0;k<30;k++){ const s=shuffle(q); if(s.every((x,i)=>i===0||x!==s[i-1])) return s; }
+  return shuffle(q);
+}
+function qShort(d){ return ({legal:'Legal',partner:'CTS&P',boss:TX.bossShort})[d.id]||d.name; }
+function renderQueue(){
+  const box=$('qstrip'); if(!box||!S.day) return;
+  box.innerHTML='';
+  const q=S.day.queue||[], qi=S.day.qi||0;
+  const cell=(t,i,st,icon)=>{ const d=deptOf(t.dept);
+    return h('button',{type:'button',class:'qcell '+st,style:`--dc:${d.color}`,title:`${i+1}. ${t.title} (${d.name})`,'aria-label':`${i+1}. ${t.title}, ${d.name}`,
+      onclick:()=>{ goRoom(roomIndex(t.dept)); if(st==='cur'){ sel={type:'task',id:t.id}; renderSheet(); } }},
+      h('span',{class:'qi','aria-hidden':'true'},icon),h('span',{class:'ql'},qShort(d))); };
+  q.forEach((id,i)=>{ const t=taskById(id); if(t) box.append(cell(t,i,i<qi?'done':i===qi?'cur':'',i<qi?'✓':t.icon)); });
+  if(qi>=q.length && S.day.tasks[0]){ const t=taskById(S.day.tasks[0]); if(t) box.append(cell(t,qi,'cur','⭐')); }
+  const cur=box.querySelector('.qcell.cur'); if(cur) box.scrollLeft=cur.offsetLeft-box.clientWidth/2+cur.offsetWidth/2;
+  document.querySelectorAll('.room.next').forEach(x=>x.classList.remove('next'));
+  const ct=S.day.tasks[0]&&taskById(S.day.tasks[0]); if(ct){ const r=$('room-'+ct.dept); if(r) r.classList.add('next'); }
+}
+if(S.day && !S.day.queue){ S.day.queue=buildQueue(); S.day.qi=0; if(S.day.queue.length) S.day.tasks=[S.day.queue[0]]; save(); }
+render();
 showHome();
 </script>
 <script>
