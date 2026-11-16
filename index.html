@@ -159,6 +159,7 @@ button,.tile,.talk-opt{touch-action:manipulation}
 .clock-chip{min-width:120px}
 .clock-chip #clockVal{font-size:22px;letter-spacing:.5px}
 .clock-chip small{display:block!important}
+.clock-chip.ot{background:#6B3FC4}
 .clock-chip.late{background:#B3362F}
 .req-list{grid-column:1/-1;display:flex;flex-direction:column;gap:6px}
 .req-item{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#FFF9EA;border-radius:8px;padding:6px 8px;font-size:13px}
@@ -439,7 +440,7 @@ button,.tile,.talk-opt{touch-action:manipulation}
       </div>
       <ul class="guide">
         <li><span class="gi" aria-hidden="true">📋</span><div><b>Hoàn thành việc mỗi ngày</b><span class="gt">Chọn việc ở lưới ô phía dưới màn hình, đi tới phòng ban liên quan và vượt qua mini-game. Làm đúng được thưởng coin.</span></div></li>
-        <li><span class="gi" aria-hidden="true">📅</span><div><b>Đi làm đều đặn</b><span class="gt">Mỗi ngày làm việc dài 5 phút (8:00–17:00 trên đồng hồ góc trái). Xong đủ 10 việc trước 17:00 mới được tính 1 ngày công.</span></div></li>
+        <li><span class="gi" aria-hidden="true">📅</span><div><b>Đi làm đều đặn</b><span class="gt">Một ngày làm việc dài 5 phút (8:00–17:00 trên đồng hồ góc trái). Xong 5 việc là đạt ngày công, 7 việc thưởng +5 coin, 10 việc thưởng +10 coin. Sau 17:00 có thể tăng ca đến 21:00.</span></div></li>
         <li><span class="gi" aria-hidden="true">❤️</span><div><b>Cẩn thận, đừng làm sai</b><span class="gt">Làm sai bị sếp gọi lên la và mất 1 mạng. Mỗi cấp có 5 mạng, hết mạng phải làm lại.</span></div></li>
         <li><span class="gi" aria-hidden="true">⚡</span><div><b>Giữ sức khỏe</b><span class="gt">Mỗi việc tốn năng lượng. Uống cà phê, chơi thể thao hoặc trò chuyện để hồi sức.</span></div></li>
         <li><span class="gi" aria-hidden="true">💬</span><div><b>Hòa đồng với mọi người</b><span class="gt">Chạm vào đồng nghiệp để tám chuyện, bàn việc. Gặp sếp Andy báo cáo, hên được +2 coin, xui bị −2 coin. Ai có dấu ❗ trên đầu là đang nhờ việc, giúp xong có thưởng.</span></div></li>
@@ -519,7 +520,7 @@ button,.tile,.talk-opt{touch-action:manipulation}
       </div>
       <ul class="guide">
         <li><span class="gi" aria-hidden="true">📋</span><div><b>Finish your daily tasks</b><span class="gt">Pick a task from the tiles at the bottom, walk to the right team and beat the mini-game. Get it right to earn coins.</span></div></li>
-        <li><span class="gi" aria-hidden="true">📅</span><div><b>Show up every day</b><span class="gt">Each workday lasts 5 minutes (8:00–17:00 on the clock at the top left). Finish 10 tasks before 17:00 for the day to count.</span></div></li>
+        <li><span class="gi" aria-hidden="true">📅</span><div><b>Show up every day</b><span class="gt">A workday lasts 5 minutes (8:00–17:00 on the clock at the top left). 5 tasks completes the day, 7 tasks earns +5 coins, 10 tasks earns +10. After 17:00 you can work overtime until 21:00.</span></div></li>
         <li><span class="gi" aria-hidden="true">❤️</span><div><b>Be careful, avoid mistakes</b><span class="gt">A wrong answer gets you scolded by the boss and costs 1 life. You have 5 lives per level; lose them all and you start over.</span></div></li>
         <li><span class="gi" aria-hidden="true">⚡</span><div><b>Keep your energy up</b><span class="gt">Every task costs energy. Grab a coffee, play some sports or chat with people to recharge.</span></div></li>
         <li><span class="gi" aria-hidden="true">💬</span><div><b>Get along with everyone</b><span class="gt">Tap a colleague to chat or talk shop. Report to boss Andy: lucky gets +2 coins, unlucky gets −2. Anyone with a ❗ above their head needs a favor, and helping pays.</span></div></li>
@@ -610,7 +611,7 @@ const TASKS_BY_LEVEL = {
     { id:'a8', title:'Phân loại phản hồi từ brand', dept:'partner', diff:'easy', game:'inbox', icon:'📬', desc:'Xem brand nào quan tâm, brand nào cần follow-up.' },
   ],
 };
-const DAY_QUOTA=10, DAY_SECONDS=300;
+const DAY_QUOTA=5, DAY_SECONDS=300, ROUTE_LEN=10, DAY_END=434, OT_WARN=417;
 const TX={
   bossShort:'Giám đốc', 
   winToast:(r,n,met)=>met?`✅ +${r} coin. Đạt chỉ tiêu ${DAY_QUOTA} việc, ngày công được tính!`:`✅ +${r} coin. Xong việc ${n}/${DAY_QUOTA}, việc mới đã tới.`,
@@ -995,6 +996,7 @@ let busy=false;
 async function startTask(id){
   if(busy) return;
   const t=taskById(id); if(!t || S.day.done[id]==='ok') return;
+  if((S.clock||0)>=DAY_END){ toast(TX.closed); return; }
   const cost=COST[t.diff];
   if(S.energy<cost){
     await showModal({ title:'Hết năng lượng', body:`<p>Việc này cần ${cost} năng lượng, bạn chỉ còn ${S.energy}. Ra giờ giải lao uống cà phê hoặc chơi thể thao để hồi sức rồi quay lại.</p>` });
@@ -1014,11 +1016,15 @@ async function onWin(t){
   S.day.done[t.id]='ok';
   const r=REWARD[t.diff]; S.coins+=r; S.earned+=r;
   S.day.doneCount=(S.day.doneCount||0)+1;
-  let met=false;
-  if(!S.day.counted && S.day.doneCount>=DAY_QUOTA){ S.day.counted=true; S.days++; met=true; }
+  const notes=[]; let extra=0;
+  if((S.clock||0)>=DAY_SECONDS){ const adj=S.day.doneCount<=DAY_QUOTA?-2:2; extra+=adj; S.day.otNet=(S.day.otNet||0)+adj; S.day.otCount=(S.day.otCount||0)+1; notes.push(TX.otAdj(adj)); }
+  if(!S.day.counted && S.day.doneCount>=DAY_QUOTA){ S.day.counted=true; S.days++; notes.push(TX.met); }
+  if(S.day.doneCount>=7 && !S.day.b7){ S.day.b7=true; extra+=5; notes.push(TX.bonus(7,5)); }
+  if(S.day.doneCount>=10 && !S.day.b10){ S.day.b10=true; extra+=10; notes.push(TX.bonus(10,10)); }
+  if(extra){ S.coins=Math.max(0,S.coins+extra); S.earned=Math.max(0,S.earned+extra); }
   S.day.qi=(S.day.qi||0)+1; S.day.tasks=[(S.day.queue&&S.day.queue[S.day.qi])||pickTasks(t.id)[0]].filter(Boolean); S.day.done={}; sel={type:'task',id:S.day.tasks[0]};
   save(); render();
-  toast(TX.winToast(r,S.day.doneCount,met));
+  toast(TX.winToast(r,S.day.doneCount,notes));
   if(shouldSabotage()) await runSabotage();
   await checkMilestones();
 }
@@ -1682,7 +1688,7 @@ const BOSS_OPTS=[
 const HI=['Ủa intern mới hả, có gì không em?','Đang chạy deadline nè, nói nhanh nha.','Hello! Hôm nay ổn không?','Vừa định đi pantry, có chuyện gì đó?','Ơ, bạn bên CTS & Partnership hả? Ngồi đi.'];
 const BOSS_HI=['Andy đây. Em cần gì?','Sếp đang xem báo cáo, có gì nói nhanh nhé.','À, bạn intern của CTS & Partnership. Mọi việc sao rồi?'];
 const BUSY_HI=['Lại là em hả? Mai nói tiếp nha.','Nãy mình nói chuyện rồi mà, để mai nhé.','Đang tập trung, mai ghé lại nha!'];
-const TIPS=['Còn 2 mạng là nên mua thêm, đừng tiếc coin.','Chọn banner nhớ đọc kỹ cả khổ lẫn màu.','Thể thao hồi nhiều năng lượng nhất, để dành lúc gần xét thăng cấp.','Email “chờ sếp duyệt” là follow-up, không phải từ chối đâu.','Gom tài liệu bên GS nhớ lấy “bản cuối”, đừng lấy bản nháp.','Mỗi ngày phải xong 10 việc mới được tính công, đừng la cà quá lâu.','Hồ sơ HR phải soi kỹ tên chủ tài khoản ngân hàng.','Báo cáo sếp sau khi làm xong việc, sếp dễ khen hơn.'];
+const TIPS=['Còn 2 mạng là nên mua thêm, đừng tiếc coin.','Chọn banner nhớ đọc kỹ cả khổ lẫn màu.','Thể thao hồi nhiều năng lượng nhất, để dành lúc gần xét thăng cấp.','Email “chờ sếp duyệt” là follow-up, không phải từ chối đâu.','Gom tài liệu bên GS nhớ lấy “bản cuối”, đừng lấy bản nháp.','Xong 5 việc trước 17:00 nhé, để tới giờ tăng ca mới làm bù là bị trừ tiền đó.','Hồ sơ HR phải soi kỹ tên chủ tài khoản ngân hàng.','Báo cáo sếp sau khi làm xong việc, sếp dễ khen hơn.'];
 const TALK_TEXT={
   chat:{good:['{n} kể chuyện con mèo nhà mình, cười muốn xỉu.','Hai người phát hiện cùng mê một bộ phim, tám không dứt.','{n} chia cho bạn nửa gói snack đang ăn dở.','{n} khoe ảnh chuyến đi Đà Lạt, xem mà thấy mát cả người.'],meh:['{n} đang bận, chỉ cười trừ cho qua.','{n} gật gù nhưng mắt vẫn dán vào màn hình.'],bad:['Tám quá đà, cả phòng {d} quay sang nhìn, hai người im re.']},
   work:{good:['{n} chỉ bạn một mẹo làm nhanh hơn, nhẹ cả người.','Hai bên chốt xong việc trong 5 phút, hiếm có khó tìm.','{n} gửi luôn file mẫu, khỏi phải làm từ đầu.'],meh:['{n} hẹn mai bàn tiếp vì đang dí deadline.'],bad:['Bàn một hồi mới phát hiện hai người hiểu khác nhau, mệt ghê.']},
@@ -2285,7 +2291,7 @@ function sanitizeState(o){
   if(isInt(o.lives,0,MAX_LIVES)) f.lives=Math.max(1,o.lives);
   if(isDate(o.lastCounted)) f.lastCounted=o.lastCounted;
   if(isInt(o.dateOffset,0,3650)) f.dateOffset=o.dateOffset;
-  if(isInt(o.dayNo,1,1e6)) f.dayNo=o.dayNo; if(isInt(o.clock,0,DAY_SECONDS)) f.clock=o.clock;
+  if(isInt(o.dayNo,1,1e6)) f.dayNo=o.dayNo; if(isInt(o.clock,0,DAY_END)) f.clock=o.clock;
   f.seenIntro=!!o.seenIntro; f.lives5=true;
   if(o.flags&&o.flags.pre===true) f.flags.pre=true;
   if(typeof o.name==='string') f.name=o.name.replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,24)||undefined;
@@ -2294,7 +2300,7 @@ function sanitizeState(o){
   if(isDate(d.date)) f.day.date=d.date;
   if(Array.isArray(d.tasks)) f.day.tasks=d.tasks.filter(t=>ids.includes(t)).slice(0,3);
   if(d.done&&typeof d.done==='object') f.day.tasks.forEach(t=>{ if(d.done[t]==='ok') f.day.done[t]='ok'; });
-  f.day.sabotage=!!d.sabotage; if(Array.isArray(d.queue)) f.day.queue=d.queue.filter(t=>ids.includes(t)).slice(0,DAY_QUOTA); if(isInt(d.qi,0,99)) f.day.qi=d.qi; if(isInt(d.doneCount,0,999)) f.day.doneCount=d.doneCount; f.day.counted=d.counted===true; if(isInt(d.no,1,1e6)) f.day.no=d.no;
+  f.day.sabotage=!!d.sabotage; if(Array.isArray(d.queue)) f.day.queue=d.queue.filter(t=>ids.includes(t)).slice(0,ROUTE_LEN); if(isInt(d.qi,0,99)) f.day.qi=d.qi; if(isInt(d.doneCount,0,999)) f.day.doneCount=d.doneCount; f.day.counted=d.counted===true; if(isInt(d.no,1,1e6)) f.day.no=d.no;
   if(d.acts&&typeof d.acts==='object') ACTS.forEach(a=>{ if(isInt(d.acts[a.id],0,99)) f.day.acts[a.id]=d.acts[a.id]; });
   if(isInt(d.bought,0,99)) f.day.bought=d.bought;
   if(d.alerts&&typeof d.alerts==='object') ['ready','missing'].forEach(k=>{ if(d.alerts[k]===true) f.day.alerts[k]=true; });
@@ -2360,12 +2366,14 @@ $('homeRestore').addEventListener('click',showRestore);
 
 /* ---------- Đồng hồ ngày làm việc, nhờ vả, mini-game mới ---------- */
 let dayEnding=false, reqTimer=6;
-function fmtClock(){ const m=8*60+Math.floor((S.clock||0)/DAY_SECONDS*540); return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'); }
+function fmtClock(){ const m=Math.min(21*60,8*60+Math.round((S.clock||0)*540/DAY_SECONDS)); return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'); }
 function renderClock(){
   if(!$('clockVal')||!S.day) return;
   $('clockVal').textContent=fmtClock();
-  $('clockDay').textContent=TX.clockSmall(S.dayNo,S.day.doneCount||0);
-  $('clockChip').classList.toggle('late',DAY_SECONDS-(S.clock||0)<=45);
+  const c=S.clock||0;
+  $('clockDay').textContent=TX.clockSmall(S.dayNo,S.day.doneCount||0,c>=DAY_SECONDS);
+  $('clockChip').classList.toggle('ot',c>=DAY_SECONDS&&c<OT_WARN);
+  $('clockChip').classList.toggle('late',c>=OT_WARN);
 }
 function activeReqs(){ return actors.filter(a=>a.req); }
 function setReq(a,req){ a.req=req; const m=a.el.querySelector('.reqmark'); if(m) m.setAttribute('opacity',req?'1':'0'); }
@@ -2379,7 +2387,7 @@ async function endDay(){
   if(dayEnding) return; dayEnding=true;
   try{
     const done=S.day.doneCount||0, ok=!!S.day.counted;
-    await showModal({kicker:TX.dayEndKicker(S.dayNo),title:TX.dayEndTitle,body:TX.dayEndBody(done,ok,S.days,nextLevel()),actions:[{label:TX.nextDay,primary:true}],dismissible:false});
+    await showModal({kicker:TX.dayEndKicker(S.dayNo),title:TX.dayEndTitle,body:TX.dayEndBody({done,ok,days:S.days,nx:nextLevel(),b7:!!S.day.b7,b10:!!S.day.b10,ot:S.day.otCount||0,otNet:S.day.otNet||0}),actions:[{label:TX.nextDay,primary:true}],dismissible:false});
     S.dayNo=(S.dayNo||1)+1; S.clock=0;
     const before=S.energy; S.energy=Math.min(MAX_ENERGY,S.energy+NEW_DAY_ENERGY);
     S.day=null; ensureDay();
@@ -2392,10 +2400,15 @@ async function endDay(){
 setInterval(()=>{
   if(document.hidden || !$('home').hidden) return;
   if(!dayEnding){
-    S.clock=Math.min(DAY_SECONDS,(S.clock||0)+1);
+    S.clock=Math.min(DAY_END,(S.clock||0)+1);
     if(S.clock%5===0) save();
     renderClock();
-    if(S.clock>=DAY_SECONDS && !busy && !document.querySelector('.overlay')) endDay();
+    const free=!busy && !document.querySelector('.overlay');
+    if(free){
+      if(S.clock>=DAY_END) endDay();
+      else if(S.clock>=OT_WARN && !S.day.lateNote){ S.day.lateNote=true; save(); showModal({kicker:'20:30',title:TX.lateTitle,body:TX.lateBody,actions:[{label:TX.otOk,primary:true}]}); }
+      else if(S.clock>=DAY_SECONDS && !S.day.otNote){ S.day.otNote=true; save(); showModal({kicker:'17:00',title:TX.otTitle,body:TX.otBody((S.day.doneCount||0)>=DAY_QUOTA,S.day.doneCount||0),actions:[{label:TX.otOk,primary:true}]}); }
+    }
   }
   reqTimer-=1;
   if(reqTimer<=0){ reqTimer=10+rand(12); if(activeReqs().length<3) spawnReq(); }
@@ -2505,7 +2518,7 @@ function buildQueue(){
   const q=[];
   ['product','marketing','gs','legal','hr','partner'].forEach(d=>{ const c=pool.filter(t=>t.dept===d); if(c.length) q.push(pick(c).id); });
   let guard=0;
-  while(q.length<DAY_QUOTA && guard++<200){ const t=pick(pool); if(q.filter(x=>x===t.id).length<2) q.push(t.id); }
+  while(q.length<ROUTE_LEN && guard++<200){ const t=pick(pool); if(q.filter(x=>x===t.id).length<2) q.push(t.id); }
   for(let k=0;k<30;k++){ const s=shuffle(q); if(s.every((x,i)=>i===0||x!==s[i-1])) return s; }
   return shuffle(q);
 }
@@ -2525,6 +2538,26 @@ function renderQueue(){
   const ct=S.day.tasks[0]&&taskById(S.day.tasks[0]); if(ct){ const r=$('room-'+ct.dept); if(r) r.classList.add('next'); }
 }
 if(S.day && !S.day.queue){ S.day.queue=buildQueue(); S.day.qi=0; if(S.day.queue.length) S.day.tasks=[S.day.queue[0]]; save(); }
+render();
+
+/* ---------- Mốc hoàn thành & tăng ca ---------- */
+function goalTxt(d){ return d<DAY_QUOTA?`${d}/${DAY_QUOTA} việc`:d<7?`${d}/7 việc 🎁+5`:d<10?`${d}/10 việc 🎁+10`:`${d} việc ⭐`; }
+Object.assign(TX,{
+  winToast:(r,n,notes)=>`✅ +${r} coin. Xong ${n} việc${notes.length?' ('+notes.join(', ')+')':''}.`,
+  met:'đạt ngày công!', bonus:(n,c)=>`mốc ${n} việc +${c} coin`, otAdj:a=>a>0?'OT +2 coin':'làm bù trong OT −2 coin',
+  clockSmall:(n,d,ot)=>`${ot?'OT, ':''}Ngày ${n}, ${goalTxt(d)}`,
+  dayLbl:(nx,days,d)=>nx?`Lên ${nx.name}: ${days}/${nx.days} ngày công. Hôm nay ${goalTxt(d)}`:`Hôm nay ${goalTxt(d)}`,
+  dayEndBody:d=>`<p>Hôm nay bạn hoàn thành <b>${d.done}</b> việc${d.ot?`, trong đó ${d.ot} việc làm lúc tăng ca`:''}.</p><ul>`
+    +[d.ok?`✅ Đạt ngày công (từ ${DAY_QUOTA} việc). Bạn có ${d.days}${d.nx?'/'+d.nx.days:''} ngày công.`:`❌ Chưa đủ ${DAY_QUOTA} việc nên ngày này không được tính công.`,
+      d.b7?'🎁 Mốc 7 việc: +5 coin':'', d.b10?'🎁 Mốc 10 việc: +10 coin':'', d.ot?`🌙 Tiền tăng ca: ${d.otNet>0?'+':d.otNet<0?'−':''}${Math.abs(d.otNet)} coin`:''].filter(Boolean).map(x=>`<li>${x}</li>`).join('')+'</ul>',
+  otTitle:'Hết giờ hành chính, bắt đầu tăng ca!',
+  otBody:(met,d)=>met?`<p>Bạn đã xong ${d} việc, đạt ngày công rồi. Giờ tăng ca kéo dài đến 21:00, mỗi việc làm thêm được <b>+2 coin</b>.</p>`
+    :`<p>Bạn mới xong ${d}/${DAY_QUOTA} việc. Giờ tăng ca kéo dài đến 21:00, nhưng mỗi việc làm bù trong giờ tăng ca bị <b>−2 coin</b> vì lẽ ra phải xong trong giờ hành chính.</p><p class="note">Đủ ${DAY_QUOTA} việc rồi thì các việc làm thêm sau đó được +2 coin.</p>`,
+  otOk:'Đã hiểu',
+  lateTitle:'20:30 rồi, chuẩn bị về thôi!',
+  lateBody:'<p>Hoàn tất việc đang làm nhé. 21:00 công ty đóng cửa, không được tăng ca thêm. Hết giờ là tự động sang ngày mới.</p>',
+  closed:'21:00 rồi, công ty đóng cửa. Chờ sang ngày mới nhé.',
+});
 render();
 showHome();
 </script>
@@ -2587,7 +2620,7 @@ const TASKS_BY_LEVEL = {
     { id:'a8', title:'Sort brand replies', dept:'partner', diff:'easy', game:'inbox', icon:'📬', desc:'See which brands are interested and which need a follow-up.' },
   ],
 };
-const DAY_QUOTA=10, DAY_SECONDS=300;
+const DAY_QUOTA=5, DAY_SECONDS=300, ROUTE_LEN=10, DAY_END=434, OT_WARN=417;
 const TX={
   bossShort:'Director', 
   winToast:(r,n,met)=>met?`✅ +${r} coins. ${DAY_QUOTA}-task quota reached, today counts as a workday!`:`✅ +${r} coins. Task ${n}/${DAY_QUOTA} done, a new one is in.`,
@@ -2972,6 +3005,7 @@ let busy=false;
 async function startTask(id){
   if(busy) return;
   const t=taskById(id); if(!t || S.day.done[id]==='ok') return;
+  if((S.clock||0)>=DAY_END){ toast(TX.closed); return; }
   const cost=COST[t.diff];
   if(S.energy<cost){
     await showModal({ title:'Out of energy', body:`<p>This task needs ${cost} energy and you only have ${S.energy}. Take a break, grab a coffee or play some sports, then come back.</p>` });
@@ -2991,11 +3025,15 @@ async function onWin(t){
   S.day.done[t.id]='ok';
   const r=REWARD[t.diff]; S.coins+=r; S.earned+=r;
   S.day.doneCount=(S.day.doneCount||0)+1;
-  let met=false;
-  if(!S.day.counted && S.day.doneCount>=DAY_QUOTA){ S.day.counted=true; S.days++; met=true; }
+  const notes=[]; let extra=0;
+  if((S.clock||0)>=DAY_SECONDS){ const adj=S.day.doneCount<=DAY_QUOTA?-2:2; extra+=adj; S.day.otNet=(S.day.otNet||0)+adj; S.day.otCount=(S.day.otCount||0)+1; notes.push(TX.otAdj(adj)); }
+  if(!S.day.counted && S.day.doneCount>=DAY_QUOTA){ S.day.counted=true; S.days++; notes.push(TX.met); }
+  if(S.day.doneCount>=7 && !S.day.b7){ S.day.b7=true; extra+=5; notes.push(TX.bonus(7,5)); }
+  if(S.day.doneCount>=10 && !S.day.b10){ S.day.b10=true; extra+=10; notes.push(TX.bonus(10,10)); }
+  if(extra){ S.coins=Math.max(0,S.coins+extra); S.earned=Math.max(0,S.earned+extra); }
   S.day.qi=(S.day.qi||0)+1; S.day.tasks=[(S.day.queue&&S.day.queue[S.day.qi])||pickTasks(t.id)[0]].filter(Boolean); S.day.done={}; sel={type:'task',id:S.day.tasks[0]};
   save(); render();
-  toast(TX.winToast(r,S.day.doneCount,met));
+  toast(TX.winToast(r,S.day.doneCount,notes));
   if(shouldSabotage()) await runSabotage();
   await checkMilestones();
 }
@@ -3659,7 +3697,7 @@ const BOSS_OPTS=[
 const HI=['Oh, the new intern? What’s up?','I’m on a deadline, make it quick.','Hello! How’s your day going?','I was just heading to the pantry. What is it?','Hey, you’re from CTS & Partnership, right? Have a seat.'];
 const BOSS_HI=['Andy here. What do you need?','I’m reading reports, so keep it short.','Ah, the CTS & Partnership intern. How’s everything?'];
 const BUSY_HI=['You again? Let’s talk tomorrow.','We already talked today. Tomorrow, okay?','I’m focusing. Come back tomorrow!'];
-const TIPS=['At 2 lives, buy another one. Don’t be stingy with coins.','When picking a banner, check both the size and the color.','Sports restores the most energy, so save it for review time.','An email saying “waiting for approval” is a follow-up, not a decline.','For the GS docs, take the “final” version, never the draft.','You need 10 tasks a day for it to count. Don’t dawdle too long.','For HR files, check the bank account holder’s name carefully.','Report to the boss after finishing tasks; he praises more.'];
+const TIPS=['At 2 lives, buy another one. Don’t be stingy with coins.','When picking a banner, check both the size and the color.','Sports restores the most energy, so save it for review time.','An email saying “waiting for approval” is a follow-up, not a decline.','For the GS docs, take the “final” version, never the draft.','Finish 5 tasks before 17:00. Catching up during overtime costs you coins.','For HR files, check the bank account holder’s name carefully.','Report to the boss after finishing tasks; he praises more.'];
 const TALK_TEXT={
   chat:{good:['{n} tells a story about their cat. You can’t stop laughing.','You both love the same TV show and can’t stop talking.','{n} shares half of their snack with you.','{n} shows photos from a trip to Đà Lạt. Refreshing just to look at.'],meh:['{n} is busy and just smiles politely.','{n} nods along but keeps staring at the screen.'],bad:['You chat too loudly and the whole {d} team turns to stare.']},
   work:{good:['{n} shows you a shortcut that saves you so much time.','You settle everything in 5 minutes. A rare miracle.','{n} sends you a template, so no starting from scratch.'],meh:['{n} asks to continue tomorrow because of a deadline.'],bad:['After a while you realize you’re talking about different things. Tiring.']},
@@ -4262,7 +4300,7 @@ function sanitizeState(o){
   if(isInt(o.lives,0,MAX_LIVES)) f.lives=Math.max(1,o.lives);
   if(isDate(o.lastCounted)) f.lastCounted=o.lastCounted;
   if(isInt(o.dateOffset,0,3650)) f.dateOffset=o.dateOffset;
-  if(isInt(o.dayNo,1,1e6)) f.dayNo=o.dayNo; if(isInt(o.clock,0,DAY_SECONDS)) f.clock=o.clock;
+  if(isInt(o.dayNo,1,1e6)) f.dayNo=o.dayNo; if(isInt(o.clock,0,DAY_END)) f.clock=o.clock;
   f.seenIntro=!!o.seenIntro; f.lives5=true;
   if(o.flags&&o.flags.pre===true) f.flags.pre=true;
   if(typeof o.name==='string') f.name=o.name.replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,24)||undefined;
@@ -4271,7 +4309,7 @@ function sanitizeState(o){
   if(isDate(d.date)) f.day.date=d.date;
   if(Array.isArray(d.tasks)) f.day.tasks=d.tasks.filter(t=>ids.includes(t)).slice(0,3);
   if(d.done&&typeof d.done==='object') f.day.tasks.forEach(t=>{ if(d.done[t]==='ok') f.day.done[t]='ok'; });
-  f.day.sabotage=!!d.sabotage; if(Array.isArray(d.queue)) f.day.queue=d.queue.filter(t=>ids.includes(t)).slice(0,DAY_QUOTA); if(isInt(d.qi,0,99)) f.day.qi=d.qi; if(isInt(d.doneCount,0,999)) f.day.doneCount=d.doneCount; f.day.counted=d.counted===true; if(isInt(d.no,1,1e6)) f.day.no=d.no;
+  f.day.sabotage=!!d.sabotage; if(Array.isArray(d.queue)) f.day.queue=d.queue.filter(t=>ids.includes(t)).slice(0,ROUTE_LEN); if(isInt(d.qi,0,99)) f.day.qi=d.qi; if(isInt(d.doneCount,0,999)) f.day.doneCount=d.doneCount; f.day.counted=d.counted===true; if(isInt(d.no,1,1e6)) f.day.no=d.no;
   if(d.acts&&typeof d.acts==='object') ACTS.forEach(a=>{ if(isInt(d.acts[a.id],0,99)) f.day.acts[a.id]=d.acts[a.id]; });
   if(isInt(d.bought,0,99)) f.day.bought=d.bought;
   if(d.alerts&&typeof d.alerts==='object') ['ready','missing'].forEach(k=>{ if(d.alerts[k]===true) f.day.alerts[k]=true; });
@@ -4337,12 +4375,14 @@ $('homeRestore').addEventListener('click',showRestore);
 
 /* ---------- Đồng hồ ngày làm việc, nhờ vả, mini-game mới ---------- */
 let dayEnding=false, reqTimer=6;
-function fmtClock(){ const m=8*60+Math.floor((S.clock||0)/DAY_SECONDS*540); return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'); }
+function fmtClock(){ const m=Math.min(21*60,8*60+Math.round((S.clock||0)*540/DAY_SECONDS)); return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'); }
 function renderClock(){
   if(!$('clockVal')||!S.day) return;
   $('clockVal').textContent=fmtClock();
-  $('clockDay').textContent=TX.clockSmall(S.dayNo,S.day.doneCount||0);
-  $('clockChip').classList.toggle('late',DAY_SECONDS-(S.clock||0)<=45);
+  const c=S.clock||0;
+  $('clockDay').textContent=TX.clockSmall(S.dayNo,S.day.doneCount||0,c>=DAY_SECONDS);
+  $('clockChip').classList.toggle('ot',c>=DAY_SECONDS&&c<OT_WARN);
+  $('clockChip').classList.toggle('late',c>=OT_WARN);
 }
 function activeReqs(){ return actors.filter(a=>a.req); }
 function setReq(a,req){ a.req=req; const m=a.el.querySelector('.reqmark'); if(m) m.setAttribute('opacity',req?'1':'0'); }
@@ -4356,7 +4396,7 @@ async function endDay(){
   if(dayEnding) return; dayEnding=true;
   try{
     const done=S.day.doneCount||0, ok=!!S.day.counted;
-    await showModal({kicker:TX.dayEndKicker(S.dayNo),title:TX.dayEndTitle,body:TX.dayEndBody(done,ok,S.days,nextLevel()),actions:[{label:TX.nextDay,primary:true}],dismissible:false});
+    await showModal({kicker:TX.dayEndKicker(S.dayNo),title:TX.dayEndTitle,body:TX.dayEndBody({done,ok,days:S.days,nx:nextLevel(),b7:!!S.day.b7,b10:!!S.day.b10,ot:S.day.otCount||0,otNet:S.day.otNet||0}),actions:[{label:TX.nextDay,primary:true}],dismissible:false});
     S.dayNo=(S.dayNo||1)+1; S.clock=0;
     const before=S.energy; S.energy=Math.min(MAX_ENERGY,S.energy+NEW_DAY_ENERGY);
     S.day=null; ensureDay();
@@ -4369,10 +4409,15 @@ async function endDay(){
 setInterval(()=>{
   if(document.hidden || !$('home').hidden) return;
   if(!dayEnding){
-    S.clock=Math.min(DAY_SECONDS,(S.clock||0)+1);
+    S.clock=Math.min(DAY_END,(S.clock||0)+1);
     if(S.clock%5===0) save();
     renderClock();
-    if(S.clock>=DAY_SECONDS && !busy && !document.querySelector('.overlay')) endDay();
+    const free=!busy && !document.querySelector('.overlay');
+    if(free){
+      if(S.clock>=DAY_END) endDay();
+      else if(S.clock>=OT_WARN && !S.day.lateNote){ S.day.lateNote=true; save(); showModal({kicker:'20:30',title:TX.lateTitle,body:TX.lateBody,actions:[{label:TX.otOk,primary:true}]}); }
+      else if(S.clock>=DAY_SECONDS && !S.day.otNote){ S.day.otNote=true; save(); showModal({kicker:'17:00',title:TX.otTitle,body:TX.otBody((S.day.doneCount||0)>=DAY_QUOTA,S.day.doneCount||0),actions:[{label:TX.otOk,primary:true}]}); }
+    }
   }
   reqTimer-=1;
   if(reqTimer<=0){ reqTimer=10+rand(12); if(activeReqs().length<3) spawnReq(); }
@@ -4482,7 +4527,7 @@ function buildQueue(){
   const q=[];
   ['product','marketing','gs','legal','hr','partner'].forEach(d=>{ const c=pool.filter(t=>t.dept===d); if(c.length) q.push(pick(c).id); });
   let guard=0;
-  while(q.length<DAY_QUOTA && guard++<200){ const t=pick(pool); if(q.filter(x=>x===t.id).length<2) q.push(t.id); }
+  while(q.length<ROUTE_LEN && guard++<200){ const t=pick(pool); if(q.filter(x=>x===t.id).length<2) q.push(t.id); }
   for(let k=0;k<30;k++){ const s=shuffle(q); if(s.every((x,i)=>i===0||x!==s[i-1])) return s; }
   return shuffle(q);
 }
@@ -4502,6 +4547,26 @@ function renderQueue(){
   const ct=S.day.tasks[0]&&taskById(S.day.tasks[0]); if(ct){ const r=$('room-'+ct.dept); if(r) r.classList.add('next'); }
 }
 if(S.day && !S.day.queue){ S.day.queue=buildQueue(); S.day.qi=0; if(S.day.queue.length) S.day.tasks=[S.day.queue[0]]; save(); }
+render();
+
+/* ---------- Completion milestones & overtime ---------- */
+function goalTxt(d){ return d<DAY_QUOTA?`${d}/${DAY_QUOTA} tasks`:d<7?`${d}/7 tasks 🎁+5`:d<10?`${d}/10 tasks 🎁+10`:`${d} tasks ⭐`; }
+Object.assign(TX,{
+  winToast:(r,n,notes)=>`✅ +${r} coins. ${n} tasks done${notes.length?' ('+notes.join(', ')+')':''}.`,
+  met:'workday complete!', bonus:(n,c)=>`${n}-task bonus +${c} coins`, otAdj:a=>a>0?'OT +2 coins':'overtime catch-up −2 coins',
+  clockSmall:(n,d,ot)=>`${ot?'OT, ':''}Day ${n}, ${goalTxt(d)}`,
+  dayLbl:(nx,days,d)=>nx?`To ${nx.name}: ${days}/${nx.days} workdays. Today ${goalTxt(d)}`:`Today ${goalTxt(d)}`,
+  dayEndBody:d=>`<p>You finished <b>${d.done}</b> tasks today${d.ot?`, ${d.ot} of them during overtime`:''}.</p><ul>`
+    +[d.ok?`✅ Workday complete (${DAY_QUOTA}+ tasks). You have ${d.days}${d.nx?'/'+d.nx.days:''} workdays.`:`❌ Fewer than ${DAY_QUOTA} tasks, so today doesn’t count as a workday.`,
+      d.b7?'🎁 7-task bonus: +5 coins':'', d.b10?'🎁 10-task bonus: +10 coins':'', d.ot?`🌙 Overtime pay: ${d.otNet>0?'+':d.otNet<0?'−':''}${Math.abs(d.otNet)} coins`:''].filter(Boolean).map(x=>`<li>${x}</li>`).join('')+'</ul>',
+  otTitle:'Office hours are over. Overtime starts!',
+  otBody:(met,d)=>met?`<p>You finished ${d} tasks, so today already counts. Overtime runs until 21:00 and every extra task earns <b>+2 coins</b>.</p>`
+    :`<p>You’ve only finished ${d}/${DAY_QUOTA} tasks. Overtime runs until 21:00, but each catch-up task during overtime costs <b>−2 coins</b> because it should have been done during office hours.</p><p class="note">Once you reach ${DAY_QUOTA} tasks, extra tasks earn +2 coins.</p>`,
+  otOk:'Got it',
+  lateTitle:'It’s 20:30, time to wrap up!',
+  lateBody:'<p>Finish what you’re working on. The office closes at 21:00 and no more overtime is allowed. The next day starts automatically.</p>',
+  closed:'It’s 21:00 and the office is closed. Wait for the next day.',
+});
 render();
 showHome();
 </script>
