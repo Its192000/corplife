@@ -148,7 +148,50 @@ button,.tile,.talk-opt{touch-action:manipulation}
 .chip.who{cursor:pointer}
 @media (max-width:420px){.cz{grid-template-columns:70px 1fr;gap:10px}.cz-prev{width:70px;height:84px}.cz-sw{width:26px;height:26px}}
 
+/* ===== Backup ===== */
+.bk{margin-top:16px;padding:12px;border-radius:12px;background:var(--surface2);border:1.5px solid var(--line)}
+.bk h3{font-size:16px;margin-bottom:4px}
+.bk p{font-size:13px;color:var(--muted);margin:0 0 10px}
+.bk-code{width:100%;min-height:96px;resize:vertical;padding:10px;border-radius:10px;border:2px solid var(--line);background:var(--surface2);color:var(--ink);font:12px/1.4 ui-monospace,Menlo,Consolas,monospace;word-break:break-all}
+.bk-file{display:block;margin:8px 0;font-size:13px}
+
+/* ===== Update: clock, favors, new mini-games ===== */
+.clock-chip{min-width:120px}
+.clock-chip #clockVal{font-size:22px;letter-spacing:.5px}
+.clock-chip small{display:block!important}
+.clock-chip.late{background:#B3362F}
+.req-list{grid-column:1/-1;display:flex;flex-direction:column;gap:6px}
+.req-item{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#FFF9EA;border-radius:8px;padding:6px 8px;font-size:13px}
+.req-item button{flex:none;border:0;border-radius:8px;padding:6px 10px;background:var(--g-green);color:#fff;font-weight:700;cursor:pointer}
+.sortgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.sortcard{position:relative;text-align:left;padding:12px 10px;border-radius:8px;border:1.5px solid var(--line);background:var(--surface2);color:var(--ink);font-weight:600;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--line)}
+.sortcard.ok{border-color:var(--ok);opacity:.65;cursor:default}
+.sortcard .no{position:absolute;top:-8px;right:-6px;background:var(--ok);color:#fff;border-radius:99px;font-size:11px;padding:1px 7px}
+.typobox{display:flex;flex-wrap:wrap;gap:4px;padding:12px;background:var(--surface2);border-radius:12px;border:1.5px solid var(--line)}
+.tword{border:1.5px solid transparent;background:transparent;color:var(--ink);font:500 16px 'Be Vietnam Pro',sans-serif;padding:5px 6px;border-radius:6px;cursor:pointer}
+.tword:hover{border-color:var(--line)}
+.tword.on{background:#FFE08A;border-color:#E0A800;color:#3A2400;text-decoration:line-through}
+.sched-wrap{overflow-x:auto}
+.sched{border-collapse:separate;border-spacing:4px;font-size:13px;width:100%}
+.sched th{padding:0}
+.slotbtn{width:100%;min-width:54px;padding:8px 4px;border-radius:8px;border:2px solid var(--ink);background:var(--surface);color:var(--ink);font-weight:700;cursor:pointer}
+.sched td{text-align:center;padding:6px 2px;border-radius:6px;font-size:11.5px;font-weight:600}
+.sched td.busy{background:color-mix(in srgb,var(--danger) 22%,var(--surface));color:var(--danger)}
+.sched td.free{background:color-mix(in srgb,var(--ok) 18%,var(--surface));color:var(--ok)}
+.sched td.pname{text-align:left;color:var(--ink);font-weight:700;white-space:nowrap}
+.memrow{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 12px;min-height:34px}
+.memchip{background:var(--sticky);color:var(--sticky-ink);border-radius:8px;padding:6px 10px;font-weight:700;font-size:14px}
+.memchip.ok{background:var(--ok);color:#fff}
+.memmenu{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media (max-width:480px){.memmenu{grid-template-columns:repeat(2,1fr)}}
+.memopt{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface2);color:var(--ink);font-size:12.5px;font-weight:600;cursor:pointer}
+.memopt .em{font-size:26px}
+.choices{display:flex;flex-direction:column;gap:8px}
+.choice{text-align:left;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface2);color:var(--ink);font-size:14px;line-height:1.45;cursor:pointer}
+.choice:hover{border-color:var(--ink)}
+
 /* ===== Talk ===== */
+
 .talk-head{display:flex;gap:12px;align-items:center;margin-bottom:12px}
 .talk-face{width:64px;height:64px;border-radius:12px;background:#BFD6EE;flex:none;overflow:hidden}
 .talk-face svg{display:block;width:100%;height:100%}
@@ -342,7 +385,7 @@ button,.tile,.talk-opt{touch-action:manipulation}
   <div class="hud">
     <div class="hud-group">
       <div class="chip who" id="whoChip" role="button" tabindex="0"><span class="face" id="empFace" aria-hidden="true"></span><span><span class="nm" id="empName">Thực tập sinh</span><span class="lvl" id="lvName">Intern</span></span></div>
-      <div class="chip days-chip"><span class="em" aria-hidden="true">📅</span><span><span id="dayVal">0/7</span><small>ngày làm việc</small></span></div>
+      <div class="chip clock-chip" id="clockChip"><span class="em" aria-hidden="true">🕘</span><span><span id="clockVal">08:00</span><small id="clockDay"></small></span><span id="dayVal" hidden></span></div>
     </div>
     <div class="hud-group">
       <div class="chip"><span class="em" aria-hidden="true">⚡</span><span><span id="enVal">15/15</span><small>năng lượng</small></span><button type="button" class="plus" id="enPlus" aria-label="Hồi năng lượng">+</button></div>
@@ -354,9 +397,6 @@ button,.tile,.talk-opt{touch-action:manipulation}
       <button type="button" class="plus grey" id="gearBtn" aria-label="Cài đặt" style="width:36px;height:36px;font-size:18px">⚙</button>
     </div>
   </div>
-
-  <button type="button" class="nav prev" id="navPrev" aria-label="Phòng bên trái">◀</button>
-  <button type="button" class="nav next" id="navNext" aria-label="Phòng bên phải">▶</button>
 
   <div class="sheet" id="sheet">
     <div class="roombar" id="roombar">
@@ -385,13 +425,13 @@ button,.tile,.talk-opt{touch-action:manipulation}
       </div>
       <ul class="guide">
         <li><span class="gi" aria-hidden="true">📋</span><div><b>Hoàn thành việc mỗi ngày</b><span class="gt">Chọn việc ở lưới ô phía dưới màn hình, đi tới phòng ban liên quan và vượt qua mini-game. Làm đúng được thưởng coin.</span></div></li>
-        <li><span class="gi" aria-hidden="true">📅</span><div><b>Đi làm đều đặn</b><span class="gt">Mỗi ngày làm xong ít nhất 1 việc mới được tính 1 ngày công. Nghỉ thì không bị trừ, chỉ không được cộng.</span></div></li>
+        <li><span class="gi" aria-hidden="true">📅</span><div><b>Đi làm đều đặn</b><span class="gt">Mỗi ngày làm việc dài 5 phút (8:00–17:00 trên đồng hồ góc trái). Xong đủ 10 việc trước 17:00 mới được tính 1 ngày công.</span></div></li>
         <li><span class="gi" aria-hidden="true">❤️</span><div><b>Cẩn thận, đừng làm sai</b><span class="gt">Làm sai bị sếp gọi lên la và mất 1 mạng. Mỗi cấp có 5 mạng, hết mạng phải làm lại.</span></div></li>
         <li><span class="gi" aria-hidden="true">⚡</span><div><b>Giữ sức khỏe</b><span class="gt">Mỗi việc tốn năng lượng. Uống cà phê, chơi thể thao hoặc trò chuyện để hồi sức.</span></div></li>
-        <li><span class="gi" aria-hidden="true">💬</span><div><b>Hòa đồng với mọi người</b><span class="gt">Chạm vào đồng nghiệp để tám chuyện, bàn việc. Gặp sếp Andy báo cáo, hên được +2 coin, xui bị −2 coin.</span></div></li>
+        <li><span class="gi" aria-hidden="true">💬</span><div><b>Hòa đồng với mọi người</b><span class="gt">Chạm vào đồng nghiệp để tám chuyện, bàn việc. Gặp sếp Andy báo cáo, hên được +2 coin, xui bị −2 coin. Ai có dấu ❗ trên đầu là đang nhờ việc, giúp xong có thưởng.</span></div></li>
         <li><span class="gi" aria-hidden="true">🏆</span><div><b>Phấn đấu thăng tiến</b><span class="gt">Đủ 7 ngày công, 45 coin tích lũy và 8 năng lượng là được lên Associate.</span></div></li>
       </ul>
-      <p class="controls-note">Chạm sàn để đi lại. Bấm ◀ ▶ để đổi phòng. Bấm nút + − ở góc trên để phóng to, thu nhỏ.</p>
+      <p class="controls-note">Chạm sàn để đi lại. Kéo hoặc vuốt màn hình để xem phòng khác. Bấm nút + − ở góc trên để phóng to, thu nhỏ.</p>
       <button type="button" class="go" id="homeNext">Đã hiểu, nhận thẻ nhân viên</button>
     </section>
 
@@ -409,6 +449,7 @@ button,.tile,.talk-opt{touch-action:manipulation}
       <div class="home-links">
         <button type="button" class="link-btn" id="homeBack">Xem lại hướng dẫn</button>
         <button type="button" class="link-btn" id="homeReset" hidden>Chơi lại từ đầu</button>
+        <button type="button" class="link-btn" id="homeRestore">Restore</button>
       </div>
     </section>
   </div>
@@ -423,7 +464,7 @@ button,.tile,.talk-opt{touch-action:manipulation}
   <div class="hud">
     <div class="hud-group">
       <div class="chip who" id="whoChip" role="button" tabindex="0"><span class="face" id="empFace" aria-hidden="true"></span><span><span class="nm" id="empName">Intern</span><span class="lvl" id="lvName">Intern</span></span></div>
-      <div class="chip days-chip"><span class="em" aria-hidden="true">📅</span><span><span id="dayVal">0/7</span><small>workdays</small></span></div>
+      <div class="chip clock-chip" id="clockChip"><span class="em" aria-hidden="true">🕘</span><span><span id="clockVal">08:00</span><small id="clockDay"></small></span><span id="dayVal" hidden></span></div>
     </div>
     <div class="hud-group">
       <div class="chip"><span class="em" aria-hidden="true">⚡</span><span><span id="enVal">15/15</span><small>energy</small></span><button type="button" class="plus" id="enPlus" aria-label="Restore energy">+</button></div>
@@ -435,9 +476,6 @@ button,.tile,.talk-opt{touch-action:manipulation}
       <button type="button" class="plus grey" id="gearBtn" aria-label="Settings" style="width:36px;height:36px;font-size:18px">⚙</button>
     </div>
   </div>
-
-  <button type="button" class="nav prev" id="navPrev" aria-label="Previous room">◀</button>
-  <button type="button" class="nav next" id="navNext" aria-label="Next room">▶</button>
 
   <div class="sheet" id="sheet">
     <div class="roombar" id="roombar">
@@ -466,13 +504,13 @@ button,.tile,.talk-opt{touch-action:manipulation}
       </div>
       <ul class="guide">
         <li><span class="gi" aria-hidden="true">📋</span><div><b>Finish your daily tasks</b><span class="gt">Pick a task from the tiles at the bottom, walk to the right team and beat the mini-game. Get it right to earn coins.</span></div></li>
-        <li><span class="gi" aria-hidden="true">📅</span><div><b>Show up every day</b><span class="gt">Finish at least 1 task in a day to log 1 workday. Skipping a day costs nothing, it just doesn’t count.</span></div></li>
+        <li><span class="gi" aria-hidden="true">📅</span><div><b>Show up every day</b><span class="gt">Each workday lasts 5 minutes (8:00–17:00 on the clock at the top left). Finish 10 tasks before 17:00 for the day to count.</span></div></li>
         <li><span class="gi" aria-hidden="true">❤️</span><div><b>Be careful, avoid mistakes</b><span class="gt">A wrong answer gets you scolded by the boss and costs 1 life. You have 5 lives per level; lose them all and you start over.</span></div></li>
         <li><span class="gi" aria-hidden="true">⚡</span><div><b>Keep your energy up</b><span class="gt">Every task costs energy. Grab a coffee, play some sports or chat with people to recharge.</span></div></li>
-        <li><span class="gi" aria-hidden="true">💬</span><div><b>Get along with everyone</b><span class="gt">Tap a colleague to chat or talk shop. Report to boss Andy: lucky gets +2 coins, unlucky gets −2.</span></div></li>
+        <li><span class="gi" aria-hidden="true">💬</span><div><b>Get along with everyone</b><span class="gt">Tap a colleague to chat or talk shop. Report to boss Andy: lucky gets +2 coins, unlucky gets −2. Anyone with a ❗ above their head needs a favor, and helping pays.</span></div></li>
         <li><span class="gi" aria-hidden="true">🏆</span><div><b>Aim for promotion</b><span class="gt">Reach 7 workdays, 45 earned coins and 8 energy to become an Associate.</span></div></li>
       </ul>
-      <p class="controls-note">Tap the floor to walk. Press ◀ ▶ to switch rooms. Use the + − buttons at the top to zoom.</p>
+      <p class="controls-note">Tap the floor to walk. Drag or swipe to look around. Use the + − buttons at the top to zoom.</p>
       <button type="button" class="go" id="homeNext">Got it, get my employee badge</button>
     </section>
 
@@ -490,6 +528,7 @@ button,.tile,.talk-opt{touch-action:manipulation}
       <div class="home-links">
         <button type="button" class="link-btn" id="homeBack">Read the guide again</button>
         <button type="button" class="link-btn" id="homeReset" hidden>Start over</button>
+        <button type="button" class="link-btn" id="homeRestore">Restore</button>
       </div>
     </section>
   </div>
@@ -504,8 +543,8 @@ button,.tile,.talk-opt{touch-action:manipulation}
 const STORE_KEY = 'dammay-office-intern-v1';
 const MAX_ENERGY = 15, MAX_LIVES = 5;
 const REWARD = { easy: 3, hard: 5 };
-const COST = { easy: 3, hard: 4 };           // năng lượng tiêu hao mỗi lần làm nhiệm vụ
-const NEW_DAY_ENERGY = 6;                     // ngủ qua đêm hồi bao nhiêu năng lượng
+const COST = { easy: 1, hard: 2 };           // năng lượng tiêu hao mỗi lần làm nhiệm vụ
+const NEW_DAY_ENERGY = 8;                     // ngủ qua đêm hồi bao nhiêu năng lượng
 const SABOTAGE_CHANCE = 0.45;                 // xác suất gặp case hãm hại sau mỗi nhiệm vụ thành công
 
 const LEVELS = [
@@ -524,18 +563,153 @@ const DEPTS = [
   { id:'legal',     name:'Admin/Legal', color:'var(--d-legal)',     desc:'Hợp đồng, chữ ký',          props:['⚖️','🗄️','👩‍💼','📑','🖨️','🧔'] },
   { id:'hr',        name:'HR',          color:'var(--d-hr)',        desc:'Hồ sơ nhân sự, CTV',        props:['🗂️','🖥️','👩‍🦰','☕','📋','🧑'] },
   { id:'partner',   name:'CTS & Partnership', color:'var(--d-partner)',   desc:'Bàn làm việc của bạn',      props:[] },
+  { id:'pantry',    name:'Pantry', color:'#C07A3A', desc:'', props:[] },
+  { id:'boss',      name:'Phòng Giám đốc', color:'#B8902E', desc:'', props:[] },
 ];
 
 const TASKS_BY_LEVEL = {
   0: [
-    { id:'i1', title:'Chuyển tài liệu xin chữ ký', dept:'legal',     diff:'easy', game:'route',  icon:'📄', desc:'Đi đúng tuyến, giao tận tay đúng người trước khi hết giờ.' },
+    { id:'i1', title:'Chuyển tài liệu xin chữ ký', dept:'legal', diff:'easy', game:'route', icon:'📄', desc:'Đi đúng tuyến, giao tận tay đúng người trước khi hết giờ.' },
     { id:'i2', title:'Xin banner quảng cáo sự kiện', dept:'marketing', diff:'easy', game:'banner', icon:'🖼️', desc:'Chọn đúng banner Marketing yêu cầu trong rổ hình ảnh.' },
-    { id:'i3', title:'Xin số liệu game cho báo cáo', dept:'product',   diff:'easy', game:'data',   icon:'📊', desc:'Điền số liệu Product gửi vào đúng ô báo cáo.' },
-    { id:'i4', title:'Nộp giấy tờ onboarding CTV mới', dept:'hr',      diff:'easy', game:'hr',     icon:'🗂️', desc:'Kiểm tra hồ sơ theo checklist, chỉ nộp giấy tờ hợp lệ.' },
-    { id:'i5', title:'Phân loại inbox đối tác', dept:'partner',        diff:'easy', game:'inbox',  icon:'📥', desc:'Xếp email vào quan tâm, từ chối, follow-up hoặc spam.' },
-    { id:'i6', title:'Chuẩn bị tài liệu họp liên phòng', dept:'gs',    diff:'hard', game:'gather', icon:'📚', desc:'Gom đúng 5 tài liệu từ đống hồ sơ trong 60 giây.' },
+    { id:'i3', title:'Xin số liệu game cho báo cáo', dept:'product', diff:'easy', game:'data', icon:'📊', desc:'Điền số liệu Product gửi vào đúng ô báo cáo.' },
+    { id:'i4', title:'Nộp giấy tờ onboarding CTV mới', dept:'hr', diff:'easy', game:'hr', icon:'🗂️', desc:'Kiểm tra hồ sơ theo checklist, chỉ nộp giấy tờ hợp lệ.' },
+    { id:'i5', title:'Phân loại inbox đối tác', dept:'partner', diff:'easy', game:'inbox', icon:'📥', desc:'Xếp email vào quan tâm, từ chối, follow-up hoặc spam.' },
+    { id:'i6', title:'Chuẩn bị tài liệu họp liên phòng', dept:'gs', diff:'hard', game:'gather', icon:'📚', desc:'Gom đúng 5 tài liệu từ đống hồ sơ trong 60 giây.' },
+    { id:'i7', title:'Sắp xếp hợp đồng theo số', dept:'legal', diff:'easy', game:'sort', variant:'contract', icon:'🗃️', desc:'Chạm các hợp đồng theo thứ tự số từ nhỏ đến lớn.' },
+    { id:'i8', title:'Soát lỗi caption fanpage', dept:'marketing', diff:'easy', game:'typo', variant:'caption', icon:'✍️', desc:'Tìm hết các chữ viết sai trước khi bài được đăng.' },
+    { id:'i9', title:'Đặt lịch họp với team GS', dept:'gs', diff:'easy', game:'schedule', icon:'📅', desc:'Tìm khung giờ cả 3 người đều rảnh.' },
+    { id:'i10', title:'Pha nước tiếp khách đối tác', dept:'pantry', diff:'easy', game:'memory', icon:'☕', desc:'Nhớ order của khách rồi mang ra đúng thứ tự.' },
+    { id:'i11', title:'Soát lỗi bản patch note', dept:'product', diff:'easy', game:'typo', variant:'patch', icon:'🛠️', desc:'Patch note sắp lên trang chủ, tìm lỗi chính tả giúp Product.' },
+    { id:'i12', title:'Xếp hồ sơ ứng viên theo ngày nộp', dept:'hr', diff:'easy', game:'sort', variant:'cv', icon:'📑', desc:'Hồ sơ nộp sớm xếp trước, nộp muộn xếp sau.' },
+    { id:'i13', title:'Xếp lịch phỏng vấn CTV', dept:'hr', diff:'easy', game:'schedule', icon:'🗓️', desc:'Chọn giờ phỏng vấn mà cả hội đồng đều rảnh.' },
+    { id:'i14', title:'Mang nước cho sếp Andy', dept:'boss', diff:'hard', game:'memory', variant:'boss', icon:'👔', desc:'Sếp đang họp, nhớ đúng order 4 món, sai là bị la.' },
+  ],
+  1: [
+    { id:'a1', title:'Xin thông tin lịch phát hành', dept:'gs', diff:'easy', game:'schedule', variant:'release', icon:'🚀', desc:'Chọn tuần phát hành mà mọi bên đều sẵn sàng.' },
+    { id:'a2', title:'Xin key visual cho proposal', dept:'marketing', diff:'easy', game:'banner', icon:'🎨', desc:'Chọn đúng bộ hình ảnh để gắn vào proposal gửi đối tác.' },
+    { id:'a3', title:'Soạn email giới thiệu đối tác', dept:'marketing', diff:'easy', game:'choice', variant:'intro', icon:'✉️', desc:'Chọn câu đúng tone cho email gửi brand.' },
+    { id:'a4', title:'Lên lịch họp với đối tác', dept:'legal', diff:'easy', game:'schedule', icon:'🤝', desc:'Ghép lịch giữa công ty và đối tác, tránh trùng giờ.' },
+    { id:'a5', title:'Follow-up deal im lặng', dept:'marketing', diff:'hard', game:'choice', variant:'followup', icon:'📨', desc:'Chọn cách nhắc đối tác vừa khéo vừa hiệu quả.' },
+    { id:'a6', title:'Xử lý đối tác phàn nàn', dept:'legal', diff:'hard', game:'choice', variant:'complaint', icon:'🧯', desc:'Chọn cách phản hồi giữ được quan hệ và đúng quy trình.' },
+    { id:'a7', title:'Soát lỗi proposal trước khi gửi', dept:'partner', diff:'easy', game:'typo', variant:'proposal', icon:'📝', desc:'Gửi đối tác mà sai chính tả là mất điểm đó.' },
+    { id:'a8', title:'Phân loại phản hồi từ brand', dept:'partner', diff:'easy', game:'inbox', icon:'📬', desc:'Xem brand nào quan tâm, brand nào cần follow-up.' },
   ],
 };
+const DAY_QUOTA=10, DAY_SECONDS=300;
+const TX={
+  winToast:(r,n,met)=>met?`✅ +${r} coin. Đạt chỉ tiêu ${DAY_QUOTA} việc, ngày công được tính!`:`✅ +${r} coin. Xong việc ${n}/${DAY_QUOTA}, việc mới đã tới.`,
+  dayEndKicker:n=>`Kết thúc ngày ${n}`,
+  dayEndTitle:'Hết giờ làm rồi!',
+  dayEndBody:(done,ok,days,nx)=>`<p>Hôm nay bạn hoàn thành <b>${done}</b> việc.</p>`+(ok?`<p class="note">Đạt chỉ tiêu ${DAY_QUOTA} việc, ngày công được tính. Bạn đang có ${days}${nx?'/'+nx.days:''} ngày công.</p>`:`<p class="note">Chưa đủ ${DAY_QUOTA} việc nên ngày này không được tính công. Ngày mai cố lên nhé!</p>`),
+  nextDay:'Sang ngày mới',
+  newDay:(n,e)=>`☀️ Ngày ${n} bắt đầu. Ngủ một giấc, năng lượng +${e}.`,
+  skipDay:'Đã tua đồng hồ tới cuối ngày.',
+  clockSmall:(n,d)=>`Ngày ${n}, ${d}/${DAY_QUOTA} việc`,
+  dayLbl:(nx,days,d)=>nx?`Lên ${nx.name}: ${days}/${nx.days} ngày công. Hôm nay ${d}/${DAY_QUOTA} việc`:`Hôm nay ${d}/${DAY_QUOTA} việc`,
+  roomStats:(id,here,req)=>id==='pantry'?`☕ Nơi tụ tập   🙋 ${req} nhờ`:id==='boss'?`👔 Sếp Andy   🙋 ${req} nhờ`:`📋 ${here} việc   🙋 ${req} nhờ`,
+  reqTile:'Nhờ vả',
+  reqTitle:'Đồng nghiệp nhờ vả',
+  reqDesc:n=>n?`Có ${n} người đang cần giúp (dấu ❗ trên đầu). Giúp xong được +2 coin, +1 năng lượng. Không tính vào chỉ tiêu, làm hỏng chỉ mất 1 năng lượng.`:'Chưa ai nhờ gì. Lát nữa sẽ có người cần giúp, để ý dấu ❗ trên đầu mọi người nhé.',
+  reqGo:'Đi giúp',
+  reqAsk:(name,text)=>`${name} ${text}`,
+  reqHelp:'Giúp ngay (+2 coin)', reqLater:'Để sau', reqChat:'Nói chuyện khác',
+  reqWin:n=>`🙏 ${n} cảm ơn bạn rối rít! +2 coin, +1 năng lượng.`,
+  reqFail:n=>`😅 Hơi rối rồi, ${n} bảo để tự làm. −1 năng lượng.`,
+  reqSay:['Ê, giúp mình chút được không?','May quá gặp bạn, đang cần người phụ nè!','Rảnh không, nhờ xíu thôi…','Cứu tui với, sắp trễ deadline rồi!','Bạn ơi, có việc nhỏ này nè…'],
+  sideKicker:'Việc phụ',
+  mg:{
+    sort:{
+      instr:'Chạm lần lượt theo đúng thứ tự.',
+      wrong:(a,b)=>`Bạn chạm “${a}” trong khi lẽ ra phải là “${b}”.`,
+      names:['Minh Anh','Gia Huy','Thảo Vy','Quốc Bảo','Ngọc Hân','Đức Trí','Khánh Linh','Tuấn Kiệt'],
+      contract:{who:'Chị Hạnh, Admin/Legal',say:'Em xếp giúp chị mấy hợp đồng này theo số từ nhỏ đến lớn nha.',label:n=>`Hợp đồng HĐ-${n}`},
+      cv:{who:'Chị Ngân, HR',say:'Xếp hồ sơ ứng viên theo ngày nộp, ai nộp sớm xếp trước nhé.',label:(nm,d)=>`${nm} (nộp ${d}/11)`},
+      docs:{who:'Đồng nghiệp',say:'Giấy tờ lộn xộn quá, xếp theo số thứ tự từ nhỏ đến lớn giúp mình với.',label:n=>`Biên bản số ${n}`},
+    },
+    typo:{
+      say:'Bài này sắp đăng rồi, soát giúp các chữ viết sai nhé.',
+      instr:n=>`Chạm vào các chữ viết sai (có ${n} lỗi), rồi bấm Xong.`,
+      submit:'Xong, đã soát',
+      miss:w=>`Bạn bỏ sót lỗi “${w}”.`, extra:w=>`“${w}” đâu có sai, bạn đánh dấu nhầm rồi.`,
+      who:{caption:'Chị Trang, Marketing',patch:'Anh Phúc, Product',proposal:'Sếp CTS & Partnership'},
+      items:{
+        caption:['Sự kiện *Gamming Festival cuối tuần này có rất nhiều *quàn tặng hấp dẫn cho game thủ','Đăng ký ngay hôm nay để nhận code *mien phí và cơ hội *trúnng iPhone','Cảm ơn các bạn đã *đòng hành cùng chúng tôi suốt một năm *qa'],
+        patch:['Bản cập nhật mới sửa *lổi đăng nhập và bổ sung nhân *vạt mới','Người chơi sẽ được *nhạn 500 kim cương khi *đăn nhập trong tuần lễ sự kiện','Server sẽ bảo *trỉ từ 2 giờ đến 4 giờ *sán thứ Ba'],
+        proposal:['Chúng tôi rất *mông muốn được *đồng hàn cùng quý thương hiệu trong mùa giải mới','Gói tài trợ bao gồm quyền lợi *hiễn thị logo trên sân *khâu chính','Rất mong nhận được *phản hồ sớm từ quý *côn ty'],
+      },
+    },
+    sched:{
+      who:'Lịch chung của team',say:'Cần chốt một buổi họp, cả 3 người đều phải tham gia được.',
+      whoRel:'Anh Dũng, GS',sayRel:'Chốt giúp anh tuần phát hành mà cả 3 bên đều sẵn sàng nhé.',
+      instr:'Chạm vào khung giờ ở hàng trên cùng mà mọi người đều rảnh.',
+      slots:['9:00','10:00','11:00','14:00','15:00','16:00'],
+      weeks:['Tuần 1','Tuần 2','Tuần 3','Tuần 4','Tuần 5'],
+      parties:['GS','Marketing','Đối tác'],
+      people:['Anh Dũng','Chị Ngọc','Tùng','Chị Hạnh','Anh Khoa','Vy','Chị Ngân','Tuyết','Huy'],
+      busy:'Bận',free:'Rảnh',
+      wrong:(sl,who)=>`Khung ${sl} bị trùng lịch của ${who}.`,
+    },
+    mem:{
+      who:'Khách đối tác',whoBoss:'Sếp Andy',say:'Cho mình order nước như sau nhé!',
+      remember:'Ghi nhớ order trong vài giây…',
+      pick:n=>`Giờ chọn ${n} món theo đúng thứ tự order.`,
+      wrong:(a,b,i)=>`Món thứ ${i} phải là ${b}, bạn lại mang ${a}.`,
+      menu:[{e:'☕',n:'Cà phê đen'},{e:'🥛',n:'Bạc xỉu'},{e:'🧋',n:'Trà sữa'},{e:'🍵',n:'Trà xanh'},{e:'🍋',n:'Trà chanh'},{e:'🍊',n:'Nước cam'},{e:'💧',n:'Nước suối'},{e:'🍫',n:'Cacao'}],
+    },
+    choice:{
+      who:'Sếp CTS & Partnership',instr:'Chọn phương án tốt nhất.',
+      wrong:why=>`Chưa ổn: ${why}`,
+      scen:{
+        intro:[
+          {q:'Bạn gửi email giới thiệu cơ hội hợp tác cho brand nước tăng lực lần đầu. Câu mở đầu nào phù hợp nhất?',opts:[
+            {t:'Chào anh/chị, em là … đến từ Đám Mây. Em xin phép giới thiệu cơ hội hợp tác cho mùa giải esports sắp tới.',ok:1},
+            {t:'Ê, bên anh có muốn tài trợ giải game không?',why:'quá suồng sã với đối tác lần đầu liên hệ.'},
+            {t:'Kính gửi Quý Công ty, căn cứ theo quy định hiện hành, chúng tôi trân trọng thông báo…',why:'quá cứng nhắc, nghe như công văn chứ không phải thư mời hợp tác.'},
+            {t:'KHẨN!!! Cơ hội có một không hai, chỉ dành cho 3 brand đầu tiên!!!',why:'giống spam quảng cáo, đối tác sẽ bỏ qua.'}]},
+          {q:'Email gửi chị Marketing Manager của một hãng trà sữa. Câu kết nào ổn nhất?',opts:[
+            {t:'Em rất mong được trao đổi thêm, chị có tiện cho một buổi gọi 20 phút vào tuần sau không ạ?',ok:1},
+            {t:'Chị trả lời sớm giùm em nha, sếp em hối quá.',why:'đẩy áp lực nội bộ sang đối tác, thiếu chuyên nghiệp.'},
+            {t:'Nếu chị không quan tâm thì thôi ạ.',why:'tiêu cực, tự đóng cửa cơ hội.'},
+            {t:'Mọi chi tiết chị tự xem trong file đính kèm 48 trang nhé.',why:'đẩy việc cho đối tác, không có lời mời hành động rõ ràng.'}]},
+        ],
+        followup:[
+          {q:'Brand im lặng 10 ngày sau khi nhận proposal. Bạn follow-up thế nào?',opts:[
+            {t:'Gửi email ngắn nhắc lại điểm nổi bật, kèm một thông tin mới (ví dụ lượt xem dự kiến) và hỏi lịch trao đổi.',ok:1},
+            {t:'Gọi điện 5 lần trong một buổi sáng cho chắc.',why:'dồn dập quá, dễ làm đối tác khó chịu.'},
+            {t:'Gửi lại y nguyên email cũ với tiêu đề “Re: Re: Re: ???”.',why:'không thêm giá trị gì, còn có vẻ trách móc.'},
+            {t:'Thôi bỏ qua, chắc họ không quan tâm.',why:'bỏ cuộc quá sớm, nhiều deal chốt sau lần follow-up thứ hai.'}]},
+          {q:'Đối tác hẹn “cuối tuần phản hồi” nhưng đã qua 1 tuần. Nên làm gì?',opts:[
+            {t:'Nhắn nhẹ: “Em gửi lại tài liệu cho tiện xem, nếu cần chỉnh gói tài trợ em hỗ trợ ngay ạ.”',ok:1},
+            {t:'Đăng story bóng gió về đối tác hứa lèo.',why:'thiếu chuyên nghiệp, có thể mất luôn mối quan hệ.'},
+            {t:'Email cho sếp của đối tác để phàn nàn.',why:'vượt cấp khi chưa cần thiết, làm người phụ trách mất mặt.'},
+            {t:'Giảm giá 50% ngay để kích họ trả lời.',why:'tự hạ giá khi chưa biết lý do họ chậm.'}]},
+        ],
+        complaint:[
+          {q:'Đối tác phàn nàn logo của họ bị đặt sai vị trí trên banner sự kiện. Phản hồi thế nào?',opts:[
+            {t:'Xin lỗi, xác nhận lỗi, đưa thời gian sửa cụ thể và gửi bản duyệt trước khi in lại.',ok:1},
+            {t:'Giải thích là do bên thiết kế, không phải lỗi của mình.',why:'đổ lỗi làm đối tác mất niềm tin vào cả công ty.'},
+            {t:'Im lặng chờ họ quên.',why:'để lâu chỉ khiến sự việc nặng hơn.'},
+            {t:'Hứa tặng thêm quyền lợi lớn để bù dù chưa hỏi sếp.',why:'cam kết vượt thẩm quyền, có thể không thực hiện được.'}]},
+          {q:'Đối tác email bực bội vì chưa nhận được hợp đồng bản ký. Bạn nên…',opts:[
+            {t:'Kiểm tra với Admin/Legal, báo rõ tình trạng và ngày gửi bản ký, kèm lời xin lỗi vì chậm trễ.',ok:1},
+            {t:'Trả lời “Bên em gửi rồi mà” khi chưa kiểm tra.',why:'khẳng định khi chưa xác minh, dễ sai và mất uy tín.'},
+            {t:'Chuyển tiếp email cho Legal rồi thôi.',why:'đối tác vẫn chưa nhận được phản hồi nào từ bạn.'},
+            {t:'Gửi luôn bản chưa ký cho đỡ.',why:'sai quy trình, bản chưa ký không có giá trị.'}]},
+        ],
+      },
+    },
+  },
+};
+const REQS={
+  product:[{t:'nhờ bạn soát lỗi chính tả bản patch note',g:'typo',v:'patch'},{t:'nhờ bạn sắp xếp giấy tờ',g:'sort',v:'docs'}],
+  marketing:[{t:'nhờ bạn chọn đúng banner cho bài đăng',g:'banner'},{t:'nhờ bạn soát lỗi caption fanpage',g:'typo',v:'caption'}],
+  gs:[{t:'nhờ bạn sắp xếp giấy tờ',g:'sort',v:'docs'},{t:'nhờ bạn xếp lịch test game',g:'schedule'}],
+  legal:[{t:'nhờ bạn xếp hợp đồng theo số',g:'sort',v:'contract'},{t:'nhờ bạn mang hồ sơ đi xin chữ ký',g:'route'}],
+  hr:[{t:'nhờ bạn xếp hồ sơ ứng viên theo ngày nộp',g:'sort',v:'cv'},{t:'nhờ bạn xếp lịch phỏng vấn',g:'schedule'}],
+  pantry:[{t:'nhờ bạn pha nước cho cả nhóm đúng order',g:'memory'}],
+  partner:[{t:'nhờ bạn phân loại giúp hộp thư',g:'inbox'},{t:'nhờ bạn đặt lịch họp với đối tác',g:'schedule'}],
+};
+const REQ_SVG=`<g class="reqmark" opacity="0" transform="translate(0,-64)"><circle r="7.5" fill="#F2A22C" stroke="#2B3550" stroke-width="1"/><text y="3.8" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="11.5" font-weight="800" fill="#3A2400">!</text></g>`;
 
 const SCOLD = {
   0: [
@@ -706,6 +880,7 @@ function freshState(keep){
     day:{ date:null, tasks:[], done:{}, sabotage:false, acts:{}, bought:0, alerts:{} },
     dateOffset: keep ? keep.dateOffset : 0,
     seenIntro: keep ? keep.seenIntro : false,
+    clock:0, dayNo:1, name: keep ? keep.name : undefined, look: keep ? keep.look : undefined, empId: keep ? keep.empId : undefined,
   };
 }
 let S;
@@ -727,22 +902,16 @@ function todayStr(){
 function prettyDate(s){ const [y,m,d]=s.split('-'); return `${d}/${m}/${y}`; }
 const levelTasks = lv => TASKS_BY_LEVEL[lv] || [];
 const hasContent = lv => levelTasks(lv).length>0;
-function pickTasks(){
-  const pool=levelTasks(S.level); const n=LEVELS[S.level].tasksPerDay;
-  return shuffle(pool).slice(0,n).map(t=>t.id);
+function pickTasks(prev){
+  const pool=levelTasks(S.level); if(!pool.length) return [];
+  const c=pool.filter(t=>t.id!==prev), w=c.flatMap(t=>t.diff==='hard'?[t]:[t,t]);
+  return [pick(w.length?w:pool).id];
 }
 function taskById(id){ return levelTasks(S.level).find(t=>t.id===id); }
 
 function ensureDay(){
-  const t=todayStr();
-  if(S.day.date===t) return false;
-  const first=!S.day.date;
-  S.day={ date:t, tasks:pickTasks(), done:{}, sabotage:false, acts:{}, bought:0, alerts:{} };
-  if(!first){
-    const before=S.energy;
-    S.energy=Math.min(MAX_ENERGY, S.energy+NEW_DAY_ENERGY);
-    toast(`Ngày mới bắt đầu. Ngủ một giấc, năng lượng +${S.energy-before}.`);
-  }
+  if(S.day && S.day.no===S.dayNo) return false;
+  S.day={ no:S.dayNo, date:'D'+S.dayNo, tasks:pickTasks(), done:{}, doneCount:0, counted:false, sabotage:false, acts:{}, bought:0, alerts:{}, talked:{} };
   save();
   return true;
 }
@@ -827,11 +996,12 @@ async function startTask(id){
 async function onWin(t){
   S.day.done[t.id]='ok';
   const r=REWARD[t.diff]; S.coins+=r; S.earned+=r;
-  let dayLine='';
-  const d=todayStr();
-  if(S.lastCounted!==d){ S.days++; S.lastCounted=d; dayLine=`<p class="note">Ngày làm việc thứ ${S.days} của bạn đã được ghi nhận.</p>`; }
+  S.day.doneCount=(S.day.doneCount||0)+1;
+  let met=false;
+  if(!S.day.counted && S.day.doneCount>=DAY_QUOTA){ S.day.counted=true; S.days++; met=true; }
+  S.day.tasks=pickTasks(t.id); S.day.done={}; sel={type:'task',id:S.day.tasks[0]};
   save(); render();
-  await showModal({ tone:'ok', kicker:`Phòng ${deptOf(t.dept).name}`, title:'Hoàn thành!', body:`<p class="big">+${r} coin</p>${dayLine}`, actions:[{label:'Tiếp tục',primary:true}] });
+  toast(TX.winToast(r,S.day.doneCount,met));
   if(shouldSabotage()) await runSabotage();
   await checkMilestones();
 }
@@ -869,14 +1039,13 @@ async function gameOver(){
 }
 function restartLevel(){
   S.days=0; S.earned=0; S.lives=MAX_LIVES; S.energy=MAX_ENERGY; S.coins=S.levelStartCoins; S.lastCounted=null; S.flags={};
-  S.day.tasks=pickTasks(); S.day.done={}; S.day.sabotage=false; S.day.alerts={};
+  S.day.tasks=pickTasks(); S.day.done={}; S.day.sabotage=false; S.day.alerts={}; S.day.doneCount=0; S.day.counted=false;
   toast(`Bắt đầu lại cấp ${LEVELS[S.level].name}.`);
 }
 
 function shouldSabotage(){
   if(S.day.sabotage) return false;
-  const remaining=S.day.tasks.filter(id=>S.day.done[id]!=='ok').length;
-  return remaining===0 || Math.random()<SABOTAGE_CHANCE;
+  return (S.day.doneCount||0)>=3 && Math.random()<.18;
 }
 
 function runSabotage(){
@@ -924,7 +1093,7 @@ async function checkMilestones(){
     const miss=missingFor(nx);
     await showModal({
       kicker:'Nhắc nhở', title:`Ngày mai là mốc xét lên ${nx.name}`,
-      body:`<p>Bạn đang ở ngày ${S.days}/${nx.days}. Hoàn thành ít nhất 1 việc vào ngày mai để đủ số ngày.</p>${miss.length?`<p>Những điều kiện khác cần chuẩn bị:</p><ul>${miss.map(m=>`<li>${m}</li>`).join('')}</ul>`:'<p>Coin và năng lượng của bạn đều đang đạt.</p>'}`
+      body:`<p>Bạn đang ở ngày ${S.days}/${nx.days}. Làm đủ ${DAY_QUOTA} việc vào ngày mai để đủ số ngày công.</p>${miss.length?`<p>Những điều kiện khác cần chuẩn bị:</p><ul>${miss.map(m=>`<li>${m}</li>`).join('')}</ul>`:'<p>Coin và năng lượng của bạn đều đang đạt.</p>'}`
     });
   }
   if(S.days>=nx.days){
@@ -1097,7 +1266,7 @@ const FURN={
     item(boxS(o,6.3,.5,0,.8,.8,42,'#7B4FD0')+faceY(o,6.38,7.02,1.3,24,36,'#FFD54A'),[6.3,.5,.8,.8],46),
     plant(o,.25,1.25),
     worker(2,4,{shirt:'#F5F5F5',hair:'#1E1E1E'},'Dũng',[0,.35]), worker(3,4,{shirt:'#22958F',hair:'#5A2E14'},'Tùng',[0,.35]),
-    npc(6,4,{shirt:'#E07F2E',hair:'#2B1B12'},'Phát'), npc(5,2,{shirt:'#9BCB6B',hair:'#5A2E14',long:true},'Ngọc'),
+    npc(6,4,{shirt:'#E07F2E',hair:'#2B1B12'},'Phát'), npc(1,6,{shirt:'#F2C230',hair:'#3A2A20'},'An'), npc(5,2,{shirt:'#9BCB6B',hair:'#5A2E14',long:true},'Ngọc'),
   ],
   legal:o=>[
     cabinet(o,.6,.3), cabinet(o,1.45,.3), cabinet(o,2.3,.3), cabinet(o,3.15,.3),
@@ -1126,7 +1295,6 @@ const FURN={
       npc(4,3,{shirt:'#D95C8E',hair:'#5A2E14',long:true},'Lan Anh',{dept:'Marketing',gossip:true}),
       npc(2,5,{shirt:'#22958F',hair:'#2B1B12',long:true},'Phương',{dept:'GS',gossip:true}),
       npc(5,2,{shirt:'#7FB3D5',hair:'#6B6B6B',long:true,pants:'#4A5A70'},'Cô Ba',{dept:'Tạp vụ',gossip:true,lines:'ba'}),
-      worker(6,4,{shirt:'#2B3550',hair:'#A7ADB6',tie:'#D9443F',pants:'#1E2433',glasses:true},'Andy',[0,0],{boss:true,gossip:true,lines:'boss'}),
     ];
   },
   boss:o=>{
@@ -1140,6 +1308,7 @@ const FURN={
       item(boxS(o,.6,6.0,0,2.6,.9,10,'#6B4532'),[.6,6,2.6,.9],14),
       item(boxS(o,.6,6.75,0,2.6,.35,22,'#5B3A2A'),[.6,6.75,2.6,.35],26),
       plant(o,.25,1.25), plant(o,7.2,7.2),
+      npc(4,4,{shirt:'#2B3550',hair:'#A7ADB6',tie:'#D9443F',pants:'#1E2433',glasses:true},'Andy',{boss:true}),
     ];
   },
   partner:o=>[
@@ -1389,7 +1558,6 @@ function sizeScene(){
   visTop=document.querySelector('.hud').offsetHeight+6;
   visH=Math.max(160,window.innerHeight-visTop-$('sheet').offsetHeight);
   baseScale=clamp(Math.min(visH/270, window.innerWidth/380),.45,2.2);
-  $('navPrev').style.top=$('navNext').style.top=(visTop+visH/2-22)+'px';
   setScale();
 }
 function hitActor(px,py){
@@ -1416,7 +1584,7 @@ function buildOffice(){
   WORLD.people.forEach(p=>{
     const r=ROOMS[p.room];
     const label=p.boss?`Sếp tổng - ${p.name}`:`${p.name} - ${p.dept||r.short||r.name}`;
-    const a=makeActor(p.x,p.y,p.look,p.actor,nameTagSVG(label,p.dept?(ROOMS.find(q=>q.name===p.dept)||r).color:r.color,p.boss)+(p.gossip?BUBBLE_SVG:''));
+    const a=makeActor(p.x,p.y,p.look,p.actor,nameTagSVG(label,p.dept?(ROOMS.find(q=>q.name===p.dept)||r).color:r.color,p.boss)+(p.gossip?BUBBLE_SVG:'')+(p.boss?'':REQ_SVG));
     Object.assign(a,{name:p.name,dept:p.dept||r.name,boss:!!p.boss,gossip:!!p.gossip,npcId:r.id+':'+p.name,label,look:p.look,lines:p.lines==='boss'?BOSS_BUBBLES:p.lines==='ba'?BA_BUBBLES:GOSSIP_LINES});
     if(p.off){ a.x+=p.off[0]; a.y+=p.off[1]; placeActor(a); }
   });
@@ -1497,7 +1665,7 @@ const BOSS_OPTS=[
 const HI=['Ủa intern mới hả, có gì không em?','Đang chạy deadline nè, nói nhanh nha.','Hello! Hôm nay ổn không?','Vừa định đi pantry, có chuyện gì đó?','Ơ, bạn bên CTS & Partnership hả? Ngồi đi.'];
 const BOSS_HI=['Andy đây. Em cần gì?','Sếp đang xem báo cáo, có gì nói nhanh nhé.','À, bạn intern của CTS & Partnership. Mọi việc sao rồi?'];
 const BUSY_HI=['Lại là em hả? Mai nói tiếp nha.','Nãy mình nói chuyện rồi mà, để mai nhé.','Đang tập trung, mai ghé lại nha!'];
-const TIPS=['Còn 2 mạng là nên mua thêm, đừng tiếc coin.','Chọn banner nhớ đọc kỹ cả khổ lẫn màu.','Thể thao hồi nhiều năng lượng nhất, để dành lúc gần xét thăng cấp.','Email “chờ sếp duyệt” là follow-up, không phải từ chối đâu.','Gom tài liệu bên GS nhớ lấy “bản cuối”, đừng lấy bản nháp.','Mỗi ngày làm xong 1 việc là được tính ngày, đừng bỏ ngày nào.','Hồ sơ HR phải soi kỹ tên chủ tài khoản ngân hàng.','Báo cáo sếp sau khi làm xong việc, sếp dễ khen hơn.'];
+const TIPS=['Còn 2 mạng là nên mua thêm, đừng tiếc coin.','Chọn banner nhớ đọc kỹ cả khổ lẫn màu.','Thể thao hồi nhiều năng lượng nhất, để dành lúc gần xét thăng cấp.','Email “chờ sếp duyệt” là follow-up, không phải từ chối đâu.','Gom tài liệu bên GS nhớ lấy “bản cuối”, đừng lấy bản nháp.','Mỗi ngày phải xong 10 việc mới được tính công, đừng la cà quá lâu.','Hồ sơ HR phải soi kỹ tên chủ tài khoản ngân hàng.','Báo cáo sếp sau khi làm xong việc, sếp dễ khen hơn.'];
 const TALK_TEXT={
   chat:{good:['{n} kể chuyện con mèo nhà mình, cười muốn xỉu.','Hai người phát hiện cùng mê một bộ phim, tám không dứt.','{n} chia cho bạn nửa gói snack đang ăn dở.','{n} khoe ảnh chuyến đi Đà Lạt, xem mà thấy mát cả người.'],meh:['{n} đang bận, chỉ cười trừ cho qua.','{n} gật gù nhưng mắt vẫn dán vào màn hình.'],bad:['Tám quá đà, cả phòng {d} quay sang nhìn, hai người im re.']},
   work:{good:['{n} chỉ bạn một mẹo làm nhanh hơn, nhẹ cả người.','Hai bên chốt xong việc trong 5 phút, hiếm có khó tìm.','{n} gửi luôn file mẫu, khỏi phải làm từ đầu.'],meh:['{n} hẹn mai bàn tiếp vì đang dí deadline.'],bad:['Bàn một hồi mới phát hiện hai người hiểu khác nhau, mệt ghê.']},
@@ -1517,7 +1685,7 @@ function rollTalk(a,opt){
     case 'gossip': return r<.55?{e:2,text:f(T.good)}:{e:-2,text:f(T.bad)};
     case 'coffee': return r<.7?{e:2,text:f(T.good)}:{e:0,text:f(T.meh)};
     case 'advice': return {e:1,text:`${a.name} khuyên: “${pick(TIPS)}”`};
-    case 'report': { const done=S.day.tasks.filter(id=>S.day.done[id]==='ok').length; return r<Math.min(.9,.3+.2*done)?{c:2,text:f(T.good)}:{c:-2,text:f(T.bad)}; }
+    case 'report': { const done=S.day.doneCount||0; return r<Math.min(.9,.3+.08*done)?{c:2,text:f(T.good)}:{c:-2,text:f(T.bad)}; }
     case 'strategy': return r<.5?{c:2,text:f(T.good)}:{c:-2,text:f(T.bad)};
     case 'care':   return r<.7?{c:2,text:f(T.good)}:{c:-2,text:f(T.bad)};
     case 'raise':  return r<.3?{c:2,text:f(T.good)}:{c:-2,text:f(T.bad)};
@@ -1534,7 +1702,7 @@ async function talkTo(a){
     const spot=spots[0]||nearestFree(nx,ny);
     followCam=true;
     await Promise.race([walkTo(player,spot[0],spot[1],{maxTime:3}), sleep(5000)]);
-    await openTalk(a);
+    if(a.req) await openRequest(a); else await openTalk(a);
   } finally { a.talking=false; a.idle=1.5+Math.random()*2; busy=false; render(); }
 }
 function openTalk(a){
@@ -1588,7 +1756,7 @@ function render(){
   $('enVal').textContent=`${S.energy}/${MAX_ENERGY}`;
   $('coinVal').textContent=S.coins;
   $('earnVal').textContent=`tích lũy ${S.earned}`;
-  renderRoomBar(); renderSheet();
+  renderRoomBar(); renderSheet(); renderClock();
 }
 
 function renderRoomBar(){
@@ -1598,11 +1766,10 @@ function renderRoomBar(){
   const tasks=S.day.tasks.map(taskById).filter(Boolean);
   const here=tasks.filter(t=>t.dept===r.id);
   const done=tasks.filter(t=>S.day.done[t.id]==='ok').length;
-  $('roomStats').textContent=r.id==='pantry'?`☕ Nơi tụ tập   ✓ ${done}/${tasks.length} việc`:r.id==='boss'?`👔 Sếp đang ở pantry   ✓ ${done}/${tasks.length} việc`:`📋 ${here.length} ở đây   ✓ ${done}/${tasks.length} việc`;
+  $('roomStats').textContent=TX.roomStats(r.id,here.length,activeReqs().filter(a=>a.homeRoom===viewRoom).length);
   const p=nx?Math.min(1,S.days/nx.days):1;
   $('dayBar').style.width=(p*100)+'%';
-  $('dayLbl').textContent=nx?`Tiến độ lên ${nx.name}: ${S.days}/${nx.days} ngày${S.lastCounted===todayStr()?', hôm nay đã được tính':''}`:'Bạn đã ở vị trí cao nhất';
-  $('navPrev').disabled=viewRoom<=0; $('navNext').disabled=viewRoom>=ROOMS.length-1;
+  $('dayLbl').textContent=TX.dayLbl(nx,S.days,S.day.doneCount||0);
 }
 
 function validSel(){
@@ -1631,6 +1798,7 @@ function renderSheet(){
   if(!hasContent(S.level)) add({type:'soon',id:'coffee',em:'🚧',lbl:'Việc mới'});
   ACTS.forEach(a=>{ const left=a.limit-(S.day.acts[a.id]||0);
     add({type:'act',id:a.id,em:a.icon,lbl:ACT_SHORT[a.id],bdg:a.limit>=99?'∞':String(Math.max(0,left)),bdgCls:left<=0?'off':'',aria:`${a.name}, ${a.limit>=99?'không giới hạn':`còn ${left} lần`}`}); });
+  { const nr=activeReqs().length; add({type:'req',id:'req',em:'🙋',lbl:TX.reqTile,bdg:String(nr),bdgCls:nr?'':'off'}); }
   add({type:'promo',id:'promo',em:'🏆',lbl:'Thăng cấp',bdg:canPromote()?'!':null,bdgCls:'ok'});
   add({type:'life',id:'life',em:'❤️',lbl:'Mua mạng',bdg:String(lifePrice())});
   renderDetail();
@@ -1656,6 +1824,8 @@ function renderDetail(){
     detailShell(a.icon,a.name,ACT_DESC[a.id],
       {label:left<=0?'Hết lượt':full?'Đầy sức rồi':'Làm ngay',sub:`${a.e>0?'+':'−'}${Math.abs(a.e)} ⚡`,disabled:left<=0||full||busy,onclick:()=>doActivity(a.id)},
       [`⚡ ${a.e>0?'+':'−'}${Math.abs(a.e)}`, a.limit>=99?'Không giới hạn':`Còn ${Math.max(0,left)} lần hôm nay`,'Không tính ngày làm việc']);
+  } else if(sel.type==='req'){
+    renderReqDetail();
   } else if(sel.type==='promo'){
     if(!nx){ detailShell('🏆','Đỉnh cao sự nghiệp','Bạn đã ở vị trí cao nhất công ty.',null,null); return; }
     if(!hasContent(S.level)){ detailShell('🏆',`Lên ${nx.name}`,`Điều kiện sẽ mở khi nhiệm vụ cấp ${LEVELS[S.level].name} ra mắt.`,null,null); return; }
@@ -1702,7 +1872,7 @@ function playMinigame(t){
       };
       foot.append(h('button',{type:'button',class:'btn ghost',onclick:()=>ctx.fail('Bạn bỏ ngang nhiệm vụ giữa chừng.')},'Bỏ cuộc'));
       el.append(h('div',{class:'trow'},tb,tl), stage, foot);
-      MINIGAMES[t.game](stage, ctx);
+      MINIGAMES[t.game](stage, ctx, t);
     }
   });
 }
@@ -1938,13 +2108,12 @@ const MINIGAMES = {
    BOOT + HOME
    ========================================================= */
 S=load();
+if(!S.dayNo) S.dayNo=1; if(typeof S.clock!=='number') S.clock=0;
 if(!S.lives5){ S.lives=Math.min(MAX_LIVES,S.lives+2); S.lives5=true; save(); }   // nâng từ 3 lên 5 mạng cho bản lưu cũ
 ensureDay();
 buildOffice();
 render();
 
-$('navPrev').addEventListener('click',()=>goRoom(viewRoom-1));
-$('navNext').addEventListener('click',()=>goRoom(viewRoom+1));
 $('enPlus').addEventListener('click',()=>{ const a=ACTS.find(x=>x.e>0 && (S.day.acts[x.id]||0)<x.limit)||ACTS[0]; sel={type:'act',id:a.id}; renderSheet(); });
 $('lifePlus').addEventListener('click',()=>{ sel={type:'life',id:'life'}; renderSheet(); });
 
@@ -1957,9 +2126,10 @@ $('gearBtn').addEventListener('click',async()=>{
   let inp;
   const v=await showModal({title:'Cài đặt',body:el=>{
     inp=nameField(el);
+    el.append(backupSection());
     el.append(h('p',{style:'margin:16px 0 0;font-size:13px;color:var(--muted)'},'Công cụ thử nghiệm (dành cho người làm game)'),
       h('div',{class:'dev-row'},
-        h('button',{type:'button',class:'btn',onclick:()=>{ S.dateOffset=(S.dateOffset||0)+1; ensureDay(); save(); render(); toast(`Đã giả lập sang ngày ${prettyDate(todayStr())}.`); }},'Giả lập sang ngày mới'),
+        h('button',{type:'button',class:'btn',onclick:()=>{ S.clock=DAY_SECONDS-3; renderClock(); toast(TX.skipDay); }},'Giả lập sang ngày mới'),
         h('button',{type:'button',class:'btn',onclick:()=>{ S.coins+=20; S.earned+=20; save(); render(); toast('+20 coin (thử nghiệm).'); }},'+20 coin'),
         h('button',{type:'button',class:'btn',onclick:()=>{ S.energy=MAX_ENERGY; save(); render(); toast('Năng lượng đã đầy.'); }},'Hồi đầy năng lượng')));
   },actions:[{label:'🌐 English',value:'lang'},{label:'Về màn hình chính',value:'home'},{label:'Lưu',primary:true,value:'ok'}]});
@@ -1968,8 +2138,6 @@ $('gearBtn').addEventListener('click',async()=>{
   if(v==='lang') switchLang();
 });
 
-setInterval(()=>{ if(!busy && ensureDay()) render(); }, 30000);
-document.addEventListener('visibilitychange',()=>{ if(!document.hidden && !busy && ensureDay()) render(); });
 
 function hasProgress(){ return S.level>0 || S.days>0 || S.coins>0 || S.earned>0; }
 function homeStep(n){
@@ -2073,6 +2241,246 @@ $('czBox').querySelector('summary').textContent=CZ.open;
 $('whoChip').setAttribute('aria-label',CZ.chip);
 buildCustomizer($('czHome'));
 applyLook();
+
+/* ---------- Sao lưu & khôi phục / Backup & restore ---------- */
+const BK={sec:'💾 Sao lưu tiến độ',note:'Tiến độ tự động lưu trên trình duyệt này, thoát ra vào lại vẫn còn. Tạo mã sao lưu để chơi tiếp trên máy khác, hoặc phòng khi lỡ xoá dữ liệu trình duyệt.',make:'Tạo mã sao lưu',restore:'Nhập mã khôi phục',
+makeTitle:'Mã sao lưu của bạn',makeNote:'Sao chép mã này và cất ở chỗ an toàn (ghi chú, tin nhắn cho chính mình…). Khi cần, dán vào mục “Nhập mã khôi phục”.',copy:'Sao chép mã',copied:'Đã sao chép mã sao lưu.',copyFail:'Không tự sao chép được, hãy chọn và sao chép thủ công.',dl:'Tải file sao lưu',close:'Đóng',
+restoreTitle:'Khôi phục tiến độ',restoreNote:'Dán mã sao lưu vào ô bên dưới, hoặc chọn file sao lưu đã tải về. Tiến độ hiện tại trên máy này sẽ bị thay thế.',file:'Chọn file sao lưu',paste:'Dán mã sao lưu ở đây',apply:'Khôi phục',cancel:'Huỷ',
+bad:'Mã không hợp lệ hoặc đã bị sửa. Kiểm tra lại xem đã sao chép đủ chưa.',wrongLang:'Mã này là của bản tiếng Anh. Hãy chuyển sang English để khôi phục.',done:'Đã khôi phục tiến độ. Đang tải lại game…',homeLink:'Khôi phục tiến độ'};
+const BK_LANG='vi';
+window.addEventListener('pagehide',()=>save());
+document.addEventListener('visibilitychange',()=>{ if(document.hidden) save(); });
+function bkHash(str){ let h=5381; for(let i=0;i<str.length;i++) h=((h<<5)+h+str.charCodeAt(i))>>>0; return h.toString(36); }
+function makeBackup(){
+  save();
+  const data=JSON.stringify(S);
+  const payload=JSON.stringify({v:1,lang:BK_LANG,t:Date.now(),c:bkHash(data),d:data});
+  return 'DMSAVE1.'+btoa(unescape(encodeURIComponent(payload)));
+}
+const isInt=(v,lo,hi)=>Number.isInteger(v)&&v>=lo&&v<=hi;
+const isDate=v=>typeof v==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(v);
+function sanitizeState(o){
+  const f=freshState();
+  if(!o||typeof o!=='object') return null;
+  if(isInt(o.level,0,LEVELS.length-1)) f.level=o.level;
+  ['days','coins','earned','levelStartCoins'].forEach(k=>{ if(isInt(o[k],0,1e6)) f[k]=o[k]; });
+  if(isInt(o.energy,0,MAX_ENERGY)) f.energy=o.energy;
+  if(isInt(o.lives,0,MAX_LIVES)) f.lives=Math.max(1,o.lives);
+  if(isDate(o.lastCounted)) f.lastCounted=o.lastCounted;
+  if(isInt(o.dateOffset,0,3650)) f.dateOffset=o.dateOffset;
+  if(isInt(o.dayNo,1,1e6)) f.dayNo=o.dayNo; if(isInt(o.clock,0,DAY_SECONDS)) f.clock=o.clock;
+  f.seenIntro=!!o.seenIntro; f.lives5=true;
+  if(o.flags&&o.flags.pre===true) f.flags.pre=true;
+  if(typeof o.name==='string') f.name=o.name.replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,24)||undefined;
+  if(typeof o.empId==='string'&&/^DM-\d{4}$/.test(o.empId)) f.empId=o.empId;
+  const d=o.day||{}, ids=levelTasks(f.level).map(t=>t.id);
+  if(isDate(d.date)) f.day.date=d.date;
+  if(Array.isArray(d.tasks)) f.day.tasks=d.tasks.filter(t=>ids.includes(t)).slice(0,3);
+  if(d.done&&typeof d.done==='object') f.day.tasks.forEach(t=>{ if(d.done[t]==='ok') f.day.done[t]='ok'; });
+  f.day.sabotage=!!d.sabotage; if(isInt(d.doneCount,0,999)) f.day.doneCount=d.doneCount; f.day.counted=d.counted===true; if(isInt(d.no,1,1e6)) f.day.no=d.no;
+  if(d.acts&&typeof d.acts==='object') ACTS.forEach(a=>{ if(isInt(d.acts[a.id],0,99)) f.day.acts[a.id]=d.acts[a.id]; });
+  if(isInt(d.bought,0,99)) f.day.bought=d.bought;
+  if(d.alerts&&typeof d.alerts==='object') ['ready','missing'].forEach(k=>{ if(d.alerts[k]===true) f.day.alerts[k]=true; });
+  if(d.talked&&typeof d.talked==='object'){ f.day.talked={}; Object.keys(d.talked).slice(0,60).forEach(k=>{ if(/^[a-z]+:[^<>]{1,30}$/.test(k)&&d.talked[k]===true) f.day.talked[k]=true; }); }
+  const L=o.look;
+  if(L&&typeof L==='object'){
+    const ok=(k,list)=>list.includes(L[k]);
+    f.look={gender:ok('gender',['male','female'])?L.gender:'male',style:ok('style',['short','long','bun'])?L.style:'short',bottom:ok('bottom',['pants','skirt'])?L.bottom:'pants',tie:L.tie===true,
+      shirt:ok('shirt',SWATCH.shirt)?L.shirt:'#3D6FD9',pants:ok('pants',SWATCH.pants)?L.pants:'#2F3A55',hair:ok('hair',SWATCH.hair)?L.hair:'#2B1B12',skin:ok('skin',SWATCH.skin)?L.skin:'#F1C7A3'};
+  }
+  return f;
+}
+function readBackup(code){
+  try{
+    code=String(code||'').replace(/\s+/g,'');
+    if(!code.startsWith('DMSAVE1.')) return {err:BK.bad};
+    const p=JSON.parse(decodeURIComponent(escape(atob(code.slice(8)))));
+    if(!p||p.v!==1||typeof p.d!=='string'||bkHash(p.d)!==p.c) return {err:BK.bad};
+    if(p.lang!==BK_LANG) return {err:BK.wrongLang};
+    const st=sanitizeState(JSON.parse(p.d));
+    return st?{state:st}:{err:BK.bad};
+  }catch(e){ return {err:BK.bad}; }
+}
+function copyText(ta){
+  const done=()=>toast(BK.copied), fail=()=>{ ta.focus(); ta.select(); toast(BK.copyFail); };
+  ta.select();
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(ta.value).then(done,()=>{ try{ document.execCommand('copy')?done():fail(); }catch(e){ fail(); } });
+  else { try{ document.execCommand('copy')?done():fail(); }catch(e){ fail(); } }
+}
+function showBackupCode(){
+  const code=makeBackup();
+  showModal({title:BK.makeTitle, body:el=>{
+    const ta=h('textarea',{class:'bk-code',readonly:'readonly','aria-label':BK.makeTitle}); ta.value=code;
+    el.append(h('p',{},BK.makeNote), ta, h('div',{class:'dev-row'},
+      h('button',{type:'button',class:'btn primary',onclick:()=>copyText(ta)},BK.copy),
+      h('button',{type:'button',class:'btn',onclick:()=>{ try{ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([code],{type:'text/plain'})); a.download=`corporate-life-backup-${(S.name||'save').replace(/[^\w\-]+/g,'_')}-${todayStr()}.txt`; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },500); }catch(e){} }},BK.dl)));
+  }, actions:[{label:BK.close,primary:true}]});
+}
+function showRestore(){
+  let ta, err;
+  showModal({title:BK.restoreTitle, body:(el,close)=>{
+    ta=h('textarea',{class:'bk-code',placeholder:BK.paste,'aria-label':BK.paste});
+    err=h('div',{class:'inline-err','aria-live':'polite'});
+    const file=h('input',{type:'file',accept:'.txt,.json,text/plain',class:'bk-file','aria-label':BK.file});
+    file.addEventListener('change',()=>{ const fl=file.files&&file.files[0]; if(!fl) return; const r=new FileReader(); r.onload=()=>{ ta.value=String(r.result||'').trim(); }; r.readAsText(fl); });
+    el.append(h('p',{},BK.restoreNote), ta, h('label',{class:'bk-file'},BK.file+': ',file), err,
+      h('div',{class:'actions'},
+        h('button',{type:'button',class:'btn',onclick:()=>close()},BK.cancel),
+        h('button',{type:'button',class:'btn primary',onclick:()=>{
+          const res=readBackup(ta.value);
+          if(res.err){ err.textContent=res.err; return; }
+          S=res.state; save(); toast(BK.done); close(); setTimeout(()=>location.reload(),700);
+        }},BK.apply)));
+  }, actions:[]});
+}
+function backupSection(){
+  return h('div',{class:'bk'},h('h3',{},BK.sec),h('p',{},BK.note),h('div',{class:'dev-row'},
+    h('button',{type:'button',class:'btn primary',onclick:showBackupCode},BK.make),
+    h('button',{type:'button',class:'btn',onclick:showRestore},BK.restore)));
+}
+$('homeRestore').textContent=BK.homeLink;
+$('homeRestore').addEventListener('click',showRestore);
+
+/* ---------- Đồng hồ ngày làm việc, nhờ vả, mini-game mới ---------- */
+let dayEnding=false, reqTimer=6;
+function fmtClock(){ const m=8*60+Math.floor((S.clock||0)/DAY_SECONDS*540); return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'); }
+function renderClock(){
+  if(!$('clockVal')||!S.day) return;
+  $('clockVal').textContent=fmtClock();
+  $('clockDay').textContent=TX.clockSmall(S.dayNo,S.day.doneCount||0);
+  $('clockChip').classList.toggle('late',DAY_SECONDS-(S.clock||0)<=45);
+}
+function activeReqs(){ return actors.filter(a=>a.req); }
+function setReq(a,req){ a.req=req; const m=a.el.querySelector('.reqmark'); if(m) m.setAttribute('opacity',req?'1':'0'); }
+function spawnReq(){
+  const pool=actors.filter(a=>a.npcId&&!a.boss&&!a.req&&!a.talking&&REQS[ROOMS[a.homeRoom].id]);
+  if(!pool.length) return;
+  const a=pick(pool); setReq(a,pick(REQS[ROOMS[a.homeRoom].id]));
+  renderRoomBar(); renderSheet();
+}
+async function endDay(){
+  if(dayEnding) return; dayEnding=true;
+  try{
+    const done=S.day.doneCount||0, ok=!!S.day.counted;
+    await showModal({kicker:TX.dayEndKicker(S.dayNo),title:TX.dayEndTitle,body:TX.dayEndBody(done,ok,S.days,nextLevel()),actions:[{label:TX.nextDay,primary:true}],dismissible:false});
+    S.dayNo=(S.dayNo||1)+1; S.clock=0;
+    const before=S.energy; S.energy=Math.min(MAX_ENERGY,S.energy+NEW_DAY_ENERGY);
+    S.day=null; ensureDay();
+    actors.forEach(a=>{ if(a.req) setReq(a,null); });
+    sel={type:'task',id:null};
+    save(); render(); toast(TX.newDay(S.dayNo,S.energy-before));
+  } finally { dayEnding=false; }
+  await checkMilestones();
+}
+setInterval(()=>{
+  if(document.hidden || !$('home').hidden) return;
+  if(!dayEnding){
+    S.clock=Math.min(DAY_SECONDS,(S.clock||0)+1);
+    if(S.clock%5===0) save();
+    renderClock();
+    if(S.clock>=DAY_SECONDS && !busy && !document.querySelector('.overlay')) endDay();
+  }
+  reqTimer-=1;
+  if(reqTimer<=0){ reqTimer=10+rand(12); if(activeReqs().length<3) spawnReq(); }
+},1000);
+async function openRequest(a){
+  const v=await showModal({kicker:TX.sideKicker,title:a.label,body:el=>{
+    el.append(h('div',{class:'talk-head'},h('div',{class:'talk-face',html:`<svg viewBox="-17 -44 34 40">${personSVG(0,0,a.look)}</svg>`}),h('p',{class:'talk-say'},`“${pick(TX.reqSay)}”`)),
+      h('p',{class:'talk-res'},'🙋 '+TX.reqAsk(a.name,a.req.t)));
+  },actions:[{label:TX.reqChat,value:'chat'},{label:TX.reqLater,value:'later'},{label:TX.reqHelp,primary:true,value:'help'}]});
+  if(v==='chat') return openTalk(a);
+  if(v!=='help'||!a.req) return;
+  const req=a.req;
+  const res=await playMinigame({id:'side',title:TX.reqAsk(a.name,req.t),dept:ROOMS[a.homeRoom].id,diff:'easy',game:req.g,variant:req.v,icon:'🙋',side:true,who:a.label});
+  setReq(a,null);
+  if(res&&res.win){ S.coins+=2; S.earned+=2; S.energy=Math.min(MAX_ENERGY,S.energy+1); S.day.reqDone=(S.day.reqDone||0)+1; toast(TX.reqWin(a.name)); }
+  else { S.energy=Math.max(0,S.energy-1); toast(TX.reqFail(a.name)); }
+  save(); render();
+}
+function renderReqDetail(){
+  const list=activeReqs();
+  detailShell('🙋',TX.reqTitle,TX.reqDesc(list.length),null,null);
+  if(!list.length) return;
+  const box=h('div',{class:'req-list'});
+  list.forEach(a=>box.append(h('div',{class:'req-item'},h('span',{},`${a.label}: ${a.req.t}`),h('button',{type:'button',onclick:()=>talkTo(a)},TX.reqGo))));
+  $('detail').append(box);
+}
+const MSG=(who,html)=>h('div',{class:'msg'},h('div',{class:'who'},who),h('div',{html}));
+const LEAD=txt=>h('p',{class:'lead',style:'font-size:13px;margin:0 0 8px'},txt);
+Object.assign(MINIGAMES,{
+  sort(root,ctx,t){
+    const M=TX.mg.sort, v=t.variant||'docs', K=M[v]||M.docs;
+    const range=(a,b)=>Array.from({length:b-a+1},(_,i)=>a+i);
+    let items;
+    if(v==='cv') items=shuffle(range(1,28)).slice(0,6).map(d=>({k:d,l:K.label(pick(M.names),d)}));
+    else items=shuffle(v==='contract'?range(100,999):range(1,30)).slice(0,6).map(n=>({k:n,l:K.label(n)}));
+    const order=items.slice().sort((a,b)=>a.k-b.k); let idx=0;
+    root.append(MSG(t.who||K.who,K.say),LEAD(M.instr));
+    const grid=h('div',{class:'sortgrid'});
+    shuffle(items).forEach(it=>{ const b=h('button',{type:'button',class:'sortcard',onclick:()=>{
+      if(ctx.ended||b.disabled) return;
+      if(it===order[idx]){ idx++; b.disabled=true; b.classList.add('ok'); b.append(h('span',{class:'no'},String(idx))); if(idx===order.length) ctx.win(); }
+      else ctx.fail(M.wrong(it.l,order[idx].l));
+    }},'📄 '+it.l); grid.append(b); });
+    root.append(grid); ctx.startTimer(t.side?30:25);
+  },
+  typo(root,ctx,t){
+    const M=TX.mg.typo, v=M.items[t.variant]?t.variant:'caption', text=pick(M.items[v]);
+    const toks=text.split(' ').map(w=>({bad:w.startsWith('*'),w:w.replace(/^\*/,''),sel:false}));
+    root.append(MSG(t.who||M.who[v],M.say),LEAD(M.instr(toks.filter(x=>x.bad).length)));
+    const box=h('div',{class:'typobox'});
+    toks.forEach(tk=>{ const b=h('button',{type:'button',class:'tword','aria-pressed':'false',onclick:()=>{ tk.sel=!tk.sel; b.classList.toggle('on',tk.sel); b.setAttribute('aria-pressed',String(tk.sel)); }},tk.w); box.append(b); });
+    root.append(box,h('div',{class:'actions',style:'margin-top:10px'},h('button',{type:'button',class:'btn primary',onclick:()=>{
+      const miss=toks.filter(x=>x.bad&&!x.sel), extra=toks.filter(x=>!x.bad&&x.sel);
+      if(!miss.length&&!extra.length) ctx.win(); else ctx.fail(extra.length?M.extra(extra[0].w):M.miss(miss[0].w));
+    }},M.submit)));
+    ctx.startTimer(35);
+  },
+  schedule(root,ctx,t){
+    const M=TX.mg.sched, rel=t.variant==='release';
+    const slots=rel?M.weeks:M.slots, ppl=rel?M.parties:shuffle(M.people).slice(0,3);
+    const c=rand(slots.length);
+    const busyM=ppl.map(()=>slots.map((_,i)=>i!==c&&Math.random()<.45));
+    slots.forEach((_,i)=>{ if(i!==c&&!busyM.some(r=>r[i])) busyM[rand(ppl.length)][i]=true; });
+    root.append(MSG(t.who||(rel?M.whoRel:M.who),rel?M.sayRel:M.say),LEAD(M.instr));
+    const tb=h('table',{class:'sched'});
+    tb.append(h('tr',{},h('th',{}),...slots.map((sl,i)=>h('th',{},h('button',{type:'button',class:'slotbtn',onclick:()=>{
+      if(ctx.ended) return;
+      if(i===c) ctx.win(); else ctx.fail(M.wrong(sl,ppl.filter((_,p)=>busyM[p][i]).join(', ')));
+    }},sl)))));
+    ppl.forEach((p,pi)=>tb.append(h('tr',{},h('td',{class:'pname'},p),...slots.map((_,i)=>h('td',{class:busyM[pi][i]?'busy':'free'},busyM[pi][i]?M.busy:M.free)))));
+    root.append(h('div',{class:'sched-wrap'},tb)); ctx.startTimer(25);
+  },
+  memory(root,ctx,t){
+    const M=TX.mg.mem, n=t.variant==='boss'?4:3;
+    const order=Array.from({length:n},()=>pick(M.menu));
+    root.append(MSG(t.who||(t.variant==='boss'?M.whoBoss:M.who),M.say));
+    const info=LEAD(M.remember);
+    const show=h('div',{class:'memrow'},...order.map(o=>h('span',{class:'memchip'},o.e+' '+o.n)));
+    const got=h('div',{class:'memrow'}), menu=h('div',{class:'memmenu'});
+    root.append(info,show,got,menu);
+    let i=0;
+    const t1=setTimeout(()=>{
+      if(ctx.ended) return;
+      show.remove(); info.textContent=M.pick(n);
+      M.menu.forEach(o=>menu.append(h('button',{type:'button',class:'memopt',onclick:()=>{
+        if(ctx.ended) return;
+        if(o===order[i]){ got.append(h('span',{class:'memchip ok'},o.e+' '+o.n)); i++; if(i===n) ctx.win(); }
+        else ctx.fail(M.wrong(o.n,order[i].n,i+1));
+      }},h('span',{class:'em','aria-hidden':'true'},o.e),o.n)));
+      ctx.startTimer(20);
+    },n===4?5000:4000);
+    ctx.onCleanup(()=>clearTimeout(t1));
+  },
+  choice(root,ctx,t){
+    const M=TX.mg.choice, sc=pick(M.scen[t.variant]||M.scen.intro);
+    root.append(MSG(t.who||M.who,sc.q),LEAD(M.instr));
+    const list=h('div',{class:'choices'});
+    shuffle(sc.opts).forEach(o=>list.append(h('button',{type:'button',class:'choice',onclick:()=>{ if(ctx.ended) return; if(o.ok) ctx.win(); else ctx.fail(M.wrong(o.why)); }},o.t)));
+    root.append(list); ctx.startTimer(t.diff==='hard'?30:35);
+  },
+});
+renderClock();
 showHome();
 </script>
 <script type="text/plain" id="js-en">
@@ -2082,8 +2490,8 @@ showHome();
 const STORE_KEY = 'dammay-office-intern-en-v1';
 const MAX_ENERGY = 15, MAX_LIVES = 5;
 const REWARD = { easy: 3, hard: 5 };
-const COST = { easy: 3, hard: 4 };           // năng lượng tiêu hao mỗi lần làm nhiệm vụ
-const NEW_DAY_ENERGY = 6;                     // ngủ qua đêm hồi bao nhiêu năng lượng
+const COST = { easy: 1, hard: 2 };           // năng lượng tiêu hao mỗi lần làm nhiệm vụ
+const NEW_DAY_ENERGY = 8;                     // ngủ qua đêm hồi bao nhiêu năng lượng
 const SABOTAGE_CHANCE = 0.45;                 // xác suất gặp case hãm hại sau mỗi nhiệm vụ thành công
 
 const LEVELS = [
@@ -2102,18 +2510,153 @@ const DEPTS = [
   { id:'legal',     name:'Admin/Legal', color:'var(--d-legal)',     desc:'Contracts, signatures',          props:['⚖️','🗄️','👩‍💼','📑','🖨️','🧔'] },
   { id:'hr',        name:'HR',          color:'var(--d-hr)',        desc:'Staff and freelancer files',        props:['🗂️','🖥️','👩‍🦰','☕','📋','🧑'] },
   { id:'partner',   name:'CTS & Partnership', color:'var(--d-partner)',   desc:'Your desk',      props:[] },
+  { id:'pantry',    name:'Pantry', color:'#C07A3A', desc:'', props:[] },
+  { id:'boss',      name:'Director’s Office', color:'#B8902E', desc:'', props:[] },
 ];
 
 const TASKS_BY_LEVEL = {
   0: [
-    { id:'i1', title:'Deliver documents for signature', dept:'legal',     diff:'easy', game:'route',  icon:'📄', desc:'Take the right route and hand it to the right person before time runs out.' },
+    { id:'i1', title:'Deliver documents for signature', dept:'legal', diff:'easy', game:'route', icon:'📄', desc:'Take the right route and hand it to the right person before time runs out.' },
     { id:'i2', title:'Get the event banner', dept:'marketing', diff:'easy', game:'banner', icon:'🖼️', desc:'Pick the exact banner Marketing asked for from the image pile.' },
-    { id:'i3', title:'Get game data for the report', dept:'product',   diff:'easy', game:'data',   icon:'📊', desc:'Fill the numbers Product sent into the right report cells.' },
-    { id:'i4', title:'Submit a new freelancer’s onboarding papers', dept:'hr',      diff:'easy', game:'hr',     icon:'🗂️', desc:'Check the file against the checklist and submit only valid papers.' },
-    { id:'i5', title:'Sort the partner inbox', dept:'partner',        diff:'easy', game:'inbox',  icon:'📥', desc:'File emails as interested, declined, follow-up or spam.' },
-    { id:'i6', title:'Prepare the cross-team meeting docs', dept:'gs',    diff:'hard', game:'gather', icon:'📚', desc:'Grab the right 5 documents from the pile in 60 seconds.' },
+    { id:'i3', title:'Get game data for the report', dept:'product', diff:'easy', game:'data', icon:'📊', desc:'Fill the numbers Product sent into the right report cells.' },
+    { id:'i4', title:'Submit a new freelancer’s onboarding papers', dept:'hr', diff:'easy', game:'hr', icon:'🗂️', desc:'Check the file against the checklist and submit only valid papers.' },
+    { id:'i5', title:'Sort the partner inbox', dept:'partner', diff:'easy', game:'inbox', icon:'📥', desc:'File emails as interested, declined, follow-up or spam.' },
+    { id:'i6', title:'Prepare the cross-team meeting docs', dept:'gs', diff:'hard', game:'gather', icon:'📚', desc:'Grab the right 5 documents from the pile in 60 seconds.' },
+    { id:'i7', title:'Sort contracts by number', dept:'legal', diff:'easy', game:'sort', variant:'contract', icon:'🗃️', desc:'Tap the contracts in number order, smallest first.' },
+    { id:'i8', title:'Proofread a fanpage caption', dept:'marketing', diff:'easy', game:'typo', variant:'caption', icon:'✍️', desc:'Find every typo before the post goes live.' },
+    { id:'i9', title:'Book a meeting with the GS team', dept:'gs', diff:'easy', game:'schedule', icon:'📅', desc:'Find the slot when all 3 people are free.' },
+    { id:'i10', title:'Serve drinks to partner guests', dept:'pantry', diff:'easy', game:'memory', icon:'☕', desc:'Remember the order, then serve it in sequence.' },
+    { id:'i11', title:'Proofread the patch notes', dept:'product', diff:'easy', game:'typo', variant:'patch', icon:'🛠️', desc:'The patch notes go live soon. Catch the typos for Product.' },
+    { id:'i12', title:'Sort applications by date', dept:'hr', diff:'easy', game:'sort', variant:'cv', icon:'📑', desc:'Earliest submissions first, latest last.' },
+    { id:'i13', title:'Schedule freelancer interviews', dept:'hr', diff:'easy', game:'schedule', icon:'🗓️', desc:'Pick an interview slot the whole panel can make.' },
+    { id:'i14', title:'Bring drinks to boss Andy', dept:'boss', diff:'hard', game:'memory', variant:'boss', icon:'👔', desc:'The boss is in a meeting. Remember all 4 drinks or get scolded.' },
+  ],
+  1: [
+    { id:'a1', title:'Get the release schedule', dept:'gs', diff:'easy', game:'schedule', variant:'release', icon:'🚀', desc:'Pick the launch week every side is ready for.' },
+    { id:'a2', title:'Get key visuals for the proposal', dept:'marketing', diff:'easy', game:'banner', icon:'🎨', desc:'Choose the right image set for the partner proposal.' },
+    { id:'a3', title:'Write a partner intro email', dept:'marketing', diff:'easy', game:'choice', variant:'intro', icon:'✉️', desc:'Choose the line with the right tone for a brand email.' },
+    { id:'a4', title:'Schedule a partner meeting', dept:'legal', diff:'easy', game:'schedule', icon:'🤝', desc:'Match the company and partner calendars without clashes.' },
+    { id:'a5', title:'Follow up on a silent deal', dept:'marketing', diff:'hard', game:'choice', variant:'followup', icon:'📨', desc:'Nudge the partner in a smart, effective way.' },
+    { id:'a6', title:'Handle a partner complaint', dept:'legal', diff:'hard', game:'choice', variant:'complaint', icon:'🧯', desc:'Respond in a way that keeps the relationship and follows process.' },
+    { id:'a7', title:'Proofread the proposal before sending', dept:'partner', diff:'easy', game:'typo', variant:'proposal', icon:'📝', desc:'Typos in a partner proposal cost you points.' },
+    { id:'a8', title:'Sort brand replies', dept:'partner', diff:'easy', game:'inbox', icon:'📬', desc:'See which brands are interested and which need a follow-up.' },
   ],
 };
+const DAY_QUOTA=10, DAY_SECONDS=300;
+const TX={
+  winToast:(r,n,met)=>met?`✅ +${r} coins. ${DAY_QUOTA}-task quota reached, today counts as a workday!`:`✅ +${r} coins. Task ${n}/${DAY_QUOTA} done, a new one is in.`,
+  dayEndKicker:n=>`End of day ${n}`,
+  dayEndTitle:'Time to clock out!',
+  dayEndBody:(done,ok,days,nx)=>`<p>You finished <b>${done}</b> tasks today.</p>`+(ok?`<p class="note">Quota of ${DAY_QUOTA} met, so today counts. You now have ${days}${nx?'/'+nx.days:''} workdays.</p>`:`<p class="note">Fewer than ${DAY_QUOTA} tasks, so today doesn’t count as a workday. You’ve got this tomorrow!</p>`),
+  nextDay:'Start the next day',
+  newDay:(n,e)=>`☀️ Day ${n} begins. After a good sleep, energy +${e}.`,
+  skipDay:'Clock fast-forwarded to the end of the day.',
+  clockSmall:(n,d)=>`Day ${n}, ${d}/${DAY_QUOTA} tasks`,
+  dayLbl:(nx,days,d)=>nx?`To ${nx.name}: ${days}/${nx.days} workdays. Today ${d}/${DAY_QUOTA} tasks`:`Today ${d}/${DAY_QUOTA} tasks`,
+  roomStats:(id,here,req)=>id==='pantry'?`☕ Hangout spot   🙋 ${req} asks`:id==='boss'?`👔 Boss Andy   🙋 ${req} asks`:`📋 ${here} tasks   🙋 ${req} asks`,
+  reqTile:'Favors',
+  reqTitle:'Coworkers need a hand',
+  reqDesc:n=>n?`${n} people need help (look for ❗ above their heads). Helping gives +2 coins and +1 energy. Favors don’t count toward the quota, and messing up only costs 1 energy.`:'Nobody needs help right now. Someone will soon, so watch for ❗ above people’s heads.',
+  reqGo:'Go help',
+  reqAsk:(name,text)=>`${name} ${text}`,
+  reqHelp:'Help now (+2 coins)', reqLater:'Later', reqChat:'Just chat',
+  reqWin:n=>`🙏 ${n} thanks you a million times! +2 coins, +1 energy.`,
+  reqFail:n=>`😅 That got messy, so ${n} will do it themselves. −1 energy.`,
+  reqSay:['Hey, can you help me for a sec?','Perfect timing, I need a hand!','Got a minute? It’s quick…','Save me, I’m about to miss a deadline!','Hey, I have a tiny favor to ask…'],
+  sideKicker:'Favor',
+  mg:{
+    sort:{
+      instr:'Tap them one by one in the right order.',
+      wrong:(a,b)=>`You tapped “${a}” but the next one should be “${b}”.`,
+      names:['Minh Anh','Gia Huy','Thảo Vy','Quốc Bảo','Ngọc Hân','Đức Trí','Khánh Linh','Tuấn Kiệt'],
+      contract:{who:'Hạnh, Admin/Legal',say:'Please sort these contracts by number, smallest first.',label:n=>`Contract C-${n}`},
+      cv:{who:'Ngân, HR',say:'Sort the applications by submission date, earliest first.',label:(nm,d)=>`${nm} (sent Nov ${d})`},
+      docs:{who:'Coworker',say:'These papers are a mess. Could you put them in number order, smallest first?',label:n=>`Minutes no. ${n}`},
+    },
+    typo:{
+      say:'This is about to go live. Please catch the spelling mistakes.',
+      instr:n=>`Tap the misspelled words (${n} mistakes), then press Done.`,
+      submit:'Done checking',
+      miss:w=>`You missed the typo “${w}”.`, extra:w=>`“${w}” is spelled correctly; you marked it by mistake.`,
+      who:{caption:'Trang, Marketing',patch:'Phúc, Product',proposal:'Your CTS & Partnership manager'},
+      items:{
+        caption:['Join our *Gamming Festival this weekend for lots of *amazng gifts for gamers','Sign up today to get a *fre code and a chance to *wim an iPhone','Thank you for *stayng with us through the whole *yaer'],
+        patch:['The new update fixes the login *buf and adds a new *charcter','Players will *recieve 500 diamonds when they log in during the *evnt week','Servers will be down for *maintenence from 2 to 4 AM on *Tuesdy'],
+        proposal:['We would be *delihgted to partner with your brand for the new *seasn','The sponsorship package includes logo *visibilty on the main *stge','We look forward to *hearring back from your *compnay soon'],
+      },
+    },
+    sched:{
+      who:'Team calendar',say:'We need a meeting slot that works for all 3 people.',
+      whoRel:'Dũng, GS',sayRel:'Help me lock a launch week that works for all 3 sides.',
+      instr:'Tap the time slot in the top row when everyone is free.',
+      slots:['9:00','10:00','11:00','14:00','15:00','16:00'],
+      weeks:['Week 1','Week 2','Week 3','Week 4','Week 5'],
+      parties:['GS','Marketing','Partner'],
+      people:['Dũng','Ngọc','Tùng','Hạnh','Khoa','Vy','Ngân','Tuyết','Huy'],
+      busy:'Busy',free:'Free',
+      wrong:(sl,who)=>`${sl} clashes with ${who}’s schedule.`,
+    },
+    mem:{
+      who:'Partner guest',whoBoss:'Boss Andy',say:'Here’s my drink order!',
+      remember:'Memorize the order for a few seconds…',
+      pick:n=>`Now pick the ${n} drinks in the exact order.`,
+      wrong:(a,b,i)=>`Drink #${i} should be ${b}, but you brought ${a}.`,
+      menu:[{e:'☕',n:'Black coffee'},{e:'🥛',n:'Milk coffee'},{e:'🧋',n:'Milk tea'},{e:'🍵',n:'Green tea'},{e:'🍋',n:'Lemon tea'},{e:'🍊',n:'Orange juice'},{e:'💧',n:'Water'},{e:'🍫',n:'Hot cocoa'}],
+    },
+    choice:{
+      who:'Your CTS & Partnership manager',instr:'Pick the best option.',
+      wrong:why=>`Not quite: ${why}`,
+      scen:{
+        intro:[
+          {q:'You’re emailing an energy drink brand about a partnership for the first time. Which opening line fits best?',opts:[
+            {t:'Hi, I’m … from Đám Mây. I’d love to introduce a partnership opportunity for our upcoming esports season.',ok:1},
+            {t:'Yo, wanna sponsor a gaming tournament?',why:'far too casual for a first contact.'},
+            {t:'To Whom It May Concern, pursuant to current regulations, we hereby notify…',why:'too stiff; it reads like a legal notice, not an invitation.'},
+            {t:'URGENT!!! Once-in-a-lifetime deal, only for the first 3 brands!!!',why:'looks like spam, so the partner will ignore it.'}]},
+          {q:'You’re writing to a milk tea brand’s Marketing Manager. Which closing line works best?',opts:[
+            {t:'I’d love to discuss further. Would a 20-minute call next week work for you?',ok:1},
+            {t:'Please reply ASAP, my boss keeps chasing me.',why:'it pushes your internal pressure onto the partner.'},
+            {t:'If you’re not interested, never mind.',why:'too negative; it closes the door yourself.'},
+            {t:'Everything is in the attached 48-page file.',why:'it dumps work on them with no clear next step.'}]},
+        ],
+        followup:[
+          {q:'A brand has gone quiet for 10 days after receiving your proposal. How do you follow up?',opts:[
+            {t:'Send a short email recapping the highlights, add one new detail (like projected views) and ask for a time to talk.',ok:1},
+            {t:'Call them 5 times in one morning to be sure.',why:'too pushy; it will annoy the partner.'},
+            {t:'Resend the same email with the subject “Re: Re: Re: ???”.',why:'it adds nothing and sounds accusing.'},
+            {t:'Give up; they’re probably not interested.',why:'too early to quit; many deals close after a second follow-up.'}]},
+          {q:'The partner promised to reply “by the weekend”, but a week has passed. What should you do?',opts:[
+            {t:'Send a light note: “Resending the deck for easy reference. Happy to adjust the package if needed.”',ok:1},
+            {t:'Post a passive-aggressive story about broken promises.',why:'unprofessional and could end the relationship.'},
+            {t:'Email their boss to complain.',why:'going over their head this early embarrasses your contact.'},
+            {t:'Offer a 50% discount right away.',why:'cutting the price before knowing why they’re slow.'}]},
+        ],
+        complaint:[
+          {q:'A partner complains their logo is in the wrong spot on the event banner. How do you respond?',opts:[
+            {t:'Apologize, confirm the mistake, give a specific fix date and send a proof before reprinting.',ok:1},
+            {t:'Explain it was the designer’s fault, not yours.',why:'blaming others makes them lose trust in the whole company.'},
+            {t:'Stay quiet and hope they forget.',why:'waiting only makes it worse.'},
+            {t:'Promise big extra benefits without asking your boss.',why:'committing beyond your authority might not be possible.'}]},
+          {q:'A partner emails, upset that they haven’t received the signed contract. You should…',opts:[
+            {t:'Check with Admin/Legal, share the exact status and send date, and apologize for the delay.',ok:1},
+            {t:'Reply “We already sent it” without checking.',why:'claiming it without verifying can be wrong and hurt credibility.'},
+            {t:'Just forward the email to Legal.',why:'the partner still hasn’t heard anything from you.'},
+            {t:'Send the unsigned version for now.',why:'wrong process; an unsigned contract isn’t valid.'}]},
+        ],
+      },
+    },
+  },
+};
+const REQS={
+  product:[{t:'asks you to proofread the patch notes',g:'typo',v:'patch'},{t:'asks you to sort some papers',g:'sort',v:'docs'}],
+  marketing:[{t:'asks you to pick the right banner for a post',g:'banner'},{t:'asks you to proofread a fanpage caption',g:'typo',v:'caption'}],
+  gs:[{t:'asks you to sort some papers',g:'sort',v:'docs'},{t:'asks you to schedule a playtest',g:'schedule'}],
+  legal:[{t:'asks you to sort contracts by number',g:'sort',v:'contract'},{t:'asks you to get a file signed',g:'route'}],
+  hr:[{t:'asks you to sort applications by date',g:'sort',v:'cv'},{t:'asks you to schedule interviews',g:'schedule'}],
+  pantry:[{t:'asks you to make drinks for the group',g:'memory'}],
+  partner:[{t:'asks you to sort the inbox',g:'inbox'},{t:'asks you to book a partner meeting',g:'schedule'}],
+};
+const REQ_SVG=`<g class="reqmark" opacity="0" transform="translate(0,-64)"><circle r="7.5" fill="#F2A22C" stroke="#2B3550" stroke-width="1"/><text y="3.8" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="11.5" font-weight="800" fill="#3A2400">!</text></g>`;
 
 const SCOLD = {
   0: [
@@ -2284,6 +2827,7 @@ function freshState(keep){
     day:{ date:null, tasks:[], done:{}, sabotage:false, acts:{}, bought:0, alerts:{} },
     dateOffset: keep ? keep.dateOffset : 0,
     seenIntro: keep ? keep.seenIntro : false,
+    clock:0, dayNo:1, name: keep ? keep.name : undefined, look: keep ? keep.look : undefined, empId: keep ? keep.empId : undefined,
   };
 }
 let S;
@@ -2305,22 +2849,16 @@ function todayStr(){
 function prettyDate(s){ const [y,m,d]=s.split('-'); return `${d}/${m}/${y}`; }
 const levelTasks = lv => TASKS_BY_LEVEL[lv] || [];
 const hasContent = lv => levelTasks(lv).length>0;
-function pickTasks(){
-  const pool=levelTasks(S.level); const n=LEVELS[S.level].tasksPerDay;
-  return shuffle(pool).slice(0,n).map(t=>t.id);
+function pickTasks(prev){
+  const pool=levelTasks(S.level); if(!pool.length) return [];
+  const c=pool.filter(t=>t.id!==prev), w=c.flatMap(t=>t.diff==='hard'?[t]:[t,t]);
+  return [pick(w.length?w:pool).id];
 }
 function taskById(id){ return levelTasks(S.level).find(t=>t.id===id); }
 
 function ensureDay(){
-  const t=todayStr();
-  if(S.day.date===t) return false;
-  const first=!S.day.date;
-  S.day={ date:t, tasks:pickTasks(), done:{}, sabotage:false, acts:{}, bought:0, alerts:{} };
-  if(!first){
-    const before=S.energy;
-    S.energy=Math.min(MAX_ENERGY, S.energy+NEW_DAY_ENERGY);
-    toast(`A new day begins. After a good sleep, energy +${S.energy-before}.`);
-  }
+  if(S.day && S.day.no===S.dayNo) return false;
+  S.day={ no:S.dayNo, date:'D'+S.dayNo, tasks:pickTasks(), done:{}, doneCount:0, counted:false, sabotage:false, acts:{}, bought:0, alerts:{}, talked:{} };
   save();
   return true;
 }
@@ -2405,11 +2943,12 @@ async function startTask(id){
 async function onWin(t){
   S.day.done[t.id]='ok';
   const r=REWARD[t.diff]; S.coins+=r; S.earned+=r;
-  let dayLine='';
-  const d=todayStr();
-  if(S.lastCounted!==d){ S.days++; S.lastCounted=d; dayLine=`<p class="note">Workday ${S.days} has been logged.</p>`; }
+  S.day.doneCount=(S.day.doneCount||0)+1;
+  let met=false;
+  if(!S.day.counted && S.day.doneCount>=DAY_QUOTA){ S.day.counted=true; S.days++; met=true; }
+  S.day.tasks=pickTasks(t.id); S.day.done={}; sel={type:'task',id:S.day.tasks[0]};
   save(); render();
-  await showModal({ tone:'ok', kicker:`${deptOf(t.dept).name} team`, title:'Done!', body:`<p class="big">+${r} coins</p>${dayLine}`, actions:[{label:'Continue',primary:true}] });
+  toast(TX.winToast(r,S.day.doneCount,met));
   if(shouldSabotage()) await runSabotage();
   await checkMilestones();
 }
@@ -2447,14 +2986,13 @@ async function gameOver(){
 }
 function restartLevel(){
   S.days=0; S.earned=0; S.lives=MAX_LIVES; S.energy=MAX_ENERGY; S.coins=S.levelStartCoins; S.lastCounted=null; S.flags={};
-  S.day.tasks=pickTasks(); S.day.done={}; S.day.sabotage=false; S.day.alerts={};
+  S.day.tasks=pickTasks(); S.day.done={}; S.day.sabotage=false; S.day.alerts={}; S.day.doneCount=0; S.day.counted=false;
   toast(`Restarting the ${LEVELS[S.level].name} level.`);
 }
 
 function shouldSabotage(){
   if(S.day.sabotage) return false;
-  const remaining=S.day.tasks.filter(id=>S.day.done[id]!=='ok').length;
-  return remaining===0 || Math.random()<SABOTAGE_CHANCE;
+  return (S.day.doneCount||0)>=3 && Math.random()<.18;
 }
 
 function runSabotage(){
@@ -2502,7 +3040,7 @@ async function checkMilestones(){
     const miss=missingFor(nx);
     await showModal({
       kicker:'Reminder', title:`Tomorrow is your ${nx.name} review`,
-      body:`<p>You are on day ${S.days}/${nx.days}. Finish at least 1 task tomorrow to reach the required days.</p>${miss.length?`<p>Other requirements to prepare:</p><ul>${miss.map(m=>`<li>${m}</li>`).join('')}</ul>`:'<p>Your coins and energy are both on track.</p>'}`
+      body:`<p>You are on day ${S.days}/${nx.days}. Finish ${DAY_QUOTA} tasks tomorrow to reach the required workdays.</p>${miss.length?`<p>Other requirements to prepare:</p><ul>${miss.map(m=>`<li>${m}</li>`).join('')}</ul>`:'<p>Your coins and energy are both on track.</p>'}`
     });
   }
   if(S.days>=nx.days){
@@ -2675,7 +3213,7 @@ const FURN={
     item(boxS(o,6.3,.5,0,.8,.8,42,'#7B4FD0')+faceY(o,6.38,7.02,1.3,24,36,'#FFD54A'),[6.3,.5,.8,.8],46),
     plant(o,.25,1.25),
     worker(2,4,{shirt:'#F5F5F5',hair:'#1E1E1E'},'Dũng',[0,.35]), worker(3,4,{shirt:'#22958F',hair:'#5A2E14'},'Tùng',[0,.35]),
-    npc(6,4,{shirt:'#E07F2E',hair:'#2B1B12'},'Phát'), npc(5,2,{shirt:'#9BCB6B',hair:'#5A2E14',long:true},'Ngọc'),
+    npc(6,4,{shirt:'#E07F2E',hair:'#2B1B12'},'Phát'), npc(1,6,{shirt:'#F2C230',hair:'#3A2A20'},'An'), npc(5,2,{shirt:'#9BCB6B',hair:'#5A2E14',long:true},'Ngọc'),
   ],
   legal:o=>[
     cabinet(o,.6,.3), cabinet(o,1.45,.3), cabinet(o,2.3,.3), cabinet(o,3.15,.3),
@@ -2704,7 +3242,6 @@ const FURN={
       npc(4,3,{shirt:'#D95C8E',hair:'#5A2E14',long:true},'Lan Anh',{dept:'Marketing',gossip:true}),
       npc(2,5,{shirt:'#22958F',hair:'#2B1B12',long:true},'Phương',{dept:'GS',gossip:true}),
       npc(5,2,{shirt:'#7FB3D5',hair:'#6B6B6B',long:true,pants:'#4A5A70'},'Auntie Ba',{dept:'Facilities',gossip:true,lines:'ba'}),
-      worker(6,4,{shirt:'#2B3550',hair:'#A7ADB6',tie:'#D9443F',pants:'#1E2433',glasses:true},'Andy',[0,0],{boss:true,gossip:true,lines:'boss'}),
     ];
   },
   boss:o=>{
@@ -2718,6 +3255,7 @@ const FURN={
       item(boxS(o,.6,6.0,0,2.6,.9,10,'#6B4532'),[.6,6,2.6,.9],14),
       item(boxS(o,.6,6.75,0,2.6,.35,22,'#5B3A2A'),[.6,6.75,2.6,.35],26),
       plant(o,.25,1.25), plant(o,7.2,7.2),
+      npc(4,4,{shirt:'#2B3550',hair:'#A7ADB6',tie:'#D9443F',pants:'#1E2433',glasses:true},'Andy',{boss:true}),
     ];
   },
   partner:o=>[
@@ -2967,7 +3505,6 @@ function sizeScene(){
   visTop=document.querySelector('.hud').offsetHeight+6;
   visH=Math.max(160,window.innerHeight-visTop-$('sheet').offsetHeight);
   baseScale=clamp(Math.min(visH/270, window.innerWidth/380),.45,2.2);
-  $('navPrev').style.top=$('navNext').style.top=(visTop+visH/2-22)+'px';
   setScale();
 }
 function hitActor(px,py){
@@ -2994,7 +3531,7 @@ function buildOffice(){
   WORLD.people.forEach(p=>{
     const r=ROOMS[p.room];
     const label=p.boss?`CEO - ${p.name}`:`${p.name} - ${p.dept||r.short||r.name}`;
-    const a=makeActor(p.x,p.y,p.look,p.actor,nameTagSVG(label,p.dept?(ROOMS.find(q=>q.name===p.dept)||r).color:r.color,p.boss)+(p.gossip?BUBBLE_SVG:''));
+    const a=makeActor(p.x,p.y,p.look,p.actor,nameTagSVG(label,p.dept?(ROOMS.find(q=>q.name===p.dept)||r).color:r.color,p.boss)+(p.gossip?BUBBLE_SVG:'')+(p.boss?'':REQ_SVG));
     Object.assign(a,{name:p.name,dept:p.dept||r.name,boss:!!p.boss,gossip:!!p.gossip,npcId:r.id+':'+p.name,label,look:p.look,lines:p.lines==='boss'?BOSS_BUBBLES:p.lines==='ba'?BA_BUBBLES:GOSSIP_LINES});
     if(p.off){ a.x+=p.off[0]; a.y+=p.off[1]; placeActor(a); }
   });
@@ -3075,7 +3612,7 @@ const BOSS_OPTS=[
 const HI=['Oh, the new intern? What’s up?','I’m on a deadline, make it quick.','Hello! How’s your day going?','I was just heading to the pantry. What is it?','Hey, you’re from CTS & Partnership, right? Have a seat.'];
 const BOSS_HI=['Andy here. What do you need?','I’m reading reports, so keep it short.','Ah, the CTS & Partnership intern. How’s everything?'];
 const BUSY_HI=['You again? Let’s talk tomorrow.','We already talked today. Tomorrow, okay?','I’m focusing. Come back tomorrow!'];
-const TIPS=['At 2 lives, buy another one. Don’t be stingy with coins.','When picking a banner, check both the size and the color.','Sports restores the most energy, so save it for review time.','An email saying “waiting for approval” is a follow-up, not a decline.','For the GS docs, take the “final” version, never the draft.','Finish 1 task a day to log the workday. Don’t skip days.','For HR files, check the bank account holder’s name carefully.','Report to the boss after finishing tasks; he praises more.'];
+const TIPS=['At 2 lives, buy another one. Don’t be stingy with coins.','When picking a banner, check both the size and the color.','Sports restores the most energy, so save it for review time.','An email saying “waiting for approval” is a follow-up, not a decline.','For the GS docs, take the “final” version, never the draft.','You need 10 tasks a day for it to count. Don’t dawdle too long.','For HR files, check the bank account holder’s name carefully.','Report to the boss after finishing tasks; he praises more.'];
 const TALK_TEXT={
   chat:{good:['{n} tells a story about their cat. You can’t stop laughing.','You both love the same TV show and can’t stop talking.','{n} shares half of their snack with you.','{n} shows photos from a trip to Đà Lạt. Refreshing just to look at.'],meh:['{n} is busy and just smiles politely.','{n} nods along but keeps staring at the screen.'],bad:['You chat too loudly and the whole {d} team turns to stare.']},
   work:{good:['{n} shows you a shortcut that saves you so much time.','You settle everything in 5 minutes. A rare miracle.','{n} sends you a template, so no starting from scratch.'],meh:['{n} asks to continue tomorrow because of a deadline.'],bad:['After a while you realize you’re talking about different things. Tiring.']},
@@ -3095,7 +3632,7 @@ function rollTalk(a,opt){
     case 'gossip': return r<.55?{e:2,text:f(T.good)}:{e:-2,text:f(T.bad)};
     case 'coffee': return r<.7?{e:2,text:f(T.good)}:{e:0,text:f(T.meh)};
     case 'advice': return {e:1,text:`${a.name} says: “${pick(TIPS)}”`};
-    case 'report': { const done=S.day.tasks.filter(id=>S.day.done[id]==='ok').length; return r<Math.min(.9,.3+.2*done)?{c:2,text:f(T.good)}:{c:-2,text:f(T.bad)}; }
+    case 'report': { const done=S.day.doneCount||0; return r<Math.min(.9,.3+.08*done)?{c:2,text:f(T.good)}:{c:-2,text:f(T.bad)}; }
     case 'strategy': return r<.5?{c:2,text:f(T.good)}:{c:-2,text:f(T.bad)};
     case 'care':   return r<.7?{c:2,text:f(T.good)}:{c:-2,text:f(T.bad)};
     case 'raise':  return r<.3?{c:2,text:f(T.good)}:{c:-2,text:f(T.bad)};
@@ -3112,7 +3649,7 @@ async function talkTo(a){
     const spot=spots[0]||nearestFree(nx,ny);
     followCam=true;
     await Promise.race([walkTo(player,spot[0],spot[1],{maxTime:3}), sleep(5000)]);
-    await openTalk(a);
+    if(a.req) await openRequest(a); else await openTalk(a);
   } finally { a.talking=false; a.idle=1.5+Math.random()*2; busy=false; render(); }
 }
 function openTalk(a){
@@ -3166,7 +3703,7 @@ function render(){
   $('enVal').textContent=`${S.energy}/${MAX_ENERGY}`;
   $('coinVal').textContent=S.coins;
   $('earnVal').textContent=`earned ${S.earned}`;
-  renderRoomBar(); renderSheet();
+  renderRoomBar(); renderSheet(); renderClock();
 }
 
 function renderRoomBar(){
@@ -3176,11 +3713,10 @@ function renderRoomBar(){
   const tasks=S.day.tasks.map(taskById).filter(Boolean);
   const here=tasks.filter(t=>t.dept===r.id);
   const done=tasks.filter(t=>S.day.done[t.id]==='ok').length;
-  $('roomStats').textContent=r.id==='pantry'?`☕ Hangout spot   ✓ ${done}/${tasks.length} tasks`:r.id==='boss'?`👔 Boss is at the pantry   ✓ ${done}/${tasks.length} tasks`:`📋 ${here.length} here   ✓ ${done}/${tasks.length} tasks`;
+  $('roomStats').textContent=TX.roomStats(r.id,here.length,activeReqs().filter(a=>a.homeRoom===viewRoom).length);
   const p=nx?Math.min(1,S.days/nx.days):1;
   $('dayBar').style.width=(p*100)+'%';
-  $('dayLbl').textContent=nx?`Progress to ${nx.name}: ${S.days}/${nx.days} days${S.lastCounted===todayStr()?', today counted':''}`:'You are at the top';
-  $('navPrev').disabled=viewRoom<=0; $('navNext').disabled=viewRoom>=ROOMS.length-1;
+  $('dayLbl').textContent=TX.dayLbl(nx,S.days,S.day.doneCount||0);
 }
 
 function validSel(){
@@ -3209,6 +3745,7 @@ function renderSheet(){
   if(!hasContent(S.level)) add({type:'soon',id:'coffee',em:'🚧',lbl:'New tasks'});
   ACTS.forEach(a=>{ const left=a.limit-(S.day.acts[a.id]||0);
     add({type:'act',id:a.id,em:a.icon,lbl:ACT_SHORT[a.id],bdg:a.limit>=99?'∞':String(Math.max(0,left)),bdgCls:left<=0?'off':'',aria:`${a.name}, ${a.limit>=99?'unlimited':`${left} left`}`}); });
+  { const nr=activeReqs().length; add({type:'req',id:'req',em:'🙋',lbl:TX.reqTile,bdg:String(nr),bdgCls:nr?'':'off'}); }
   add({type:'promo',id:'promo',em:'🏆',lbl:'Promotion',bdg:canPromote()?'!':null,bdgCls:'ok'});
   add({type:'life',id:'life',em:'❤️',lbl:'Buy life',bdg:String(lifePrice())});
   renderDetail();
@@ -3234,6 +3771,8 @@ function renderDetail(){
     detailShell(a.icon,a.name,ACT_DESC[a.id],
       {label:left<=0?'No turns left':full?'Full energy':'Do it',sub:`${a.e>0?'+':'−'}${Math.abs(a.e)} ⚡`,disabled:left<=0||full||busy,onclick:()=>doActivity(a.id)},
       [`⚡ ${a.e>0?'+':'−'}${Math.abs(a.e)}`, a.limit>=99?'Unlimited':`${Math.max(0,left)} left today`,'Doesn’t count as a workday']);
+  } else if(sel.type==='req'){
+    renderReqDetail();
   } else if(sel.type==='promo'){
     if(!nx){ detailShell('🏆','Career peak','You are at the top of the company.',null,null); return; }
     if(!hasContent(S.level)){ detailShell('🏆',`Become ${nx.name}`,`Requirements unlock when ${LEVELS[S.level].name} tasks launch.`,null,null); return; }
@@ -3280,7 +3819,7 @@ function playMinigame(t){
       };
       foot.append(h('button',{type:'button',class:'btn ghost',onclick:()=>ctx.fail('You quit the task halfway.')},'Give up'));
       el.append(h('div',{class:'trow'},tb,tl), stage, foot);
-      MINIGAMES[t.game](stage, ctx);
+      MINIGAMES[t.game](stage, ctx, t);
     }
   });
 }
@@ -3516,13 +4055,12 @@ const MINIGAMES = {
    BOOT + HOME
    ========================================================= */
 S=load();
+if(!S.dayNo) S.dayNo=1; if(typeof S.clock!=='number') S.clock=0;
 if(!S.lives5){ S.lives=Math.min(MAX_LIVES,S.lives+2); S.lives5=true; save(); }   // nâng từ 3 lên 5 mạng cho bản lưu cũ
 ensureDay();
 buildOffice();
 render();
 
-$('navPrev').addEventListener('click',()=>goRoom(viewRoom-1));
-$('navNext').addEventListener('click',()=>goRoom(viewRoom+1));
 $('enPlus').addEventListener('click',()=>{ const a=ACTS.find(x=>x.e>0 && (S.day.acts[x.id]||0)<x.limit)||ACTS[0]; sel={type:'act',id:a.id}; renderSheet(); });
 $('lifePlus').addEventListener('click',()=>{ sel={type:'life',id:'life'}; renderSheet(); });
 
@@ -3535,9 +4073,10 @@ $('gearBtn').addEventListener('click',async()=>{
   let inp;
   const v=await showModal({title:'Settings',body:el=>{
     inp=nameField(el);
+    el.append(backupSection());
     el.append(h('p',{style:'margin:16px 0 0;font-size:13px;color:var(--muted)'},'Test tools (for the game maker)'),
       h('div',{class:'dev-row'},
-        h('button',{type:'button',class:'btn',onclick:()=>{ S.dateOffset=(S.dateOffset||0)+1; ensureDay(); save(); render(); toast(`Simulated a jump to ${prettyDate(todayStr())}.`); }},'Simulate next day'),
+        h('button',{type:'button',class:'btn',onclick:()=>{ S.clock=DAY_SECONDS-3; renderClock(); toast(TX.skipDay); }},'Simulate next day'),
         h('button',{type:'button',class:'btn',onclick:()=>{ S.coins+=20; S.earned+=20; save(); render(); toast('+20 coins (test).'); }},'+20 coins'),
         h('button',{type:'button',class:'btn',onclick:()=>{ S.energy=MAX_ENERGY; save(); render(); toast('Energy is full.'); }},'Refill energy')));
   },actions:[{label:'🌐 Tiếng Việt',value:'lang'},{label:'Back to home screen',value:'home'},{label:'Save',primary:true,value:'ok'}]});
@@ -3546,8 +4085,6 @@ $('gearBtn').addEventListener('click',async()=>{
   if(v==='lang') switchLang();
 });
 
-setInterval(()=>{ if(!busy && ensureDay()) render(); }, 30000);
-document.addEventListener('visibilitychange',()=>{ if(!document.hidden && !busy && ensureDay()) render(); });
 
 function hasProgress(){ return S.level>0 || S.days>0 || S.coins>0 || S.earned>0; }
 function homeStep(n){
@@ -3651,6 +4188,246 @@ $('czBox').querySelector('summary').textContent=CZ.open;
 $('whoChip').setAttribute('aria-label',CZ.chip);
 buildCustomizer($('czHome'));
 applyLook();
+
+/* ---------- Sao lưu & khôi phục / Backup & restore ---------- */
+const BK={sec:'💾 Back up your progress',note:'Progress saves automatically in this browser, so it is still here when you come back. Create a backup code to continue on another device or in case browser data gets cleared.',make:'Create backup code',restore:'Enter a restore code',
+makeTitle:'Your backup code',makeNote:'Copy this code and keep it somewhere safe (a note, a message to yourself…). Paste it into “Enter a restore code” when you need it.',copy:'Copy code',copied:'Backup code copied.',copyFail:'Couldn’t copy automatically. Select the code and copy it manually.',dl:'Download backup file',close:'Close',
+restoreTitle:'Restore progress',restoreNote:'Paste your backup code below, or choose a downloaded backup file. Your current progress on this device will be replaced.',file:'Choose backup file',paste:'Paste your backup code here',apply:'Restore',cancel:'Cancel',
+bad:'This code is invalid or was edited. Check that you copied all of it.',wrongLang:'This code is from the Vietnamese version. Switch to Tiếng Việt to restore it.',done:'Progress restored. Reloading the game…',homeLink:'Restore progress'};
+const BK_LANG='en';
+window.addEventListener('pagehide',()=>save());
+document.addEventListener('visibilitychange',()=>{ if(document.hidden) save(); });
+function bkHash(str){ let h=5381; for(let i=0;i<str.length;i++) h=((h<<5)+h+str.charCodeAt(i))>>>0; return h.toString(36); }
+function makeBackup(){
+  save();
+  const data=JSON.stringify(S);
+  const payload=JSON.stringify({v:1,lang:BK_LANG,t:Date.now(),c:bkHash(data),d:data});
+  return 'DMSAVE1.'+btoa(unescape(encodeURIComponent(payload)));
+}
+const isInt=(v,lo,hi)=>Number.isInteger(v)&&v>=lo&&v<=hi;
+const isDate=v=>typeof v==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(v);
+function sanitizeState(o){
+  const f=freshState();
+  if(!o||typeof o!=='object') return null;
+  if(isInt(o.level,0,LEVELS.length-1)) f.level=o.level;
+  ['days','coins','earned','levelStartCoins'].forEach(k=>{ if(isInt(o[k],0,1e6)) f[k]=o[k]; });
+  if(isInt(o.energy,0,MAX_ENERGY)) f.energy=o.energy;
+  if(isInt(o.lives,0,MAX_LIVES)) f.lives=Math.max(1,o.lives);
+  if(isDate(o.lastCounted)) f.lastCounted=o.lastCounted;
+  if(isInt(o.dateOffset,0,3650)) f.dateOffset=o.dateOffset;
+  if(isInt(o.dayNo,1,1e6)) f.dayNo=o.dayNo; if(isInt(o.clock,0,DAY_SECONDS)) f.clock=o.clock;
+  f.seenIntro=!!o.seenIntro; f.lives5=true;
+  if(o.flags&&o.flags.pre===true) f.flags.pre=true;
+  if(typeof o.name==='string') f.name=o.name.replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,24)||undefined;
+  if(typeof o.empId==='string'&&/^DM-\d{4}$/.test(o.empId)) f.empId=o.empId;
+  const d=o.day||{}, ids=levelTasks(f.level).map(t=>t.id);
+  if(isDate(d.date)) f.day.date=d.date;
+  if(Array.isArray(d.tasks)) f.day.tasks=d.tasks.filter(t=>ids.includes(t)).slice(0,3);
+  if(d.done&&typeof d.done==='object') f.day.tasks.forEach(t=>{ if(d.done[t]==='ok') f.day.done[t]='ok'; });
+  f.day.sabotage=!!d.sabotage; if(isInt(d.doneCount,0,999)) f.day.doneCount=d.doneCount; f.day.counted=d.counted===true; if(isInt(d.no,1,1e6)) f.day.no=d.no;
+  if(d.acts&&typeof d.acts==='object') ACTS.forEach(a=>{ if(isInt(d.acts[a.id],0,99)) f.day.acts[a.id]=d.acts[a.id]; });
+  if(isInt(d.bought,0,99)) f.day.bought=d.bought;
+  if(d.alerts&&typeof d.alerts==='object') ['ready','missing'].forEach(k=>{ if(d.alerts[k]===true) f.day.alerts[k]=true; });
+  if(d.talked&&typeof d.talked==='object'){ f.day.talked={}; Object.keys(d.talked).slice(0,60).forEach(k=>{ if(/^[a-z]+:[^<>]{1,30}$/.test(k)&&d.talked[k]===true) f.day.talked[k]=true; }); }
+  const L=o.look;
+  if(L&&typeof L==='object'){
+    const ok=(k,list)=>list.includes(L[k]);
+    f.look={gender:ok('gender',['male','female'])?L.gender:'male',style:ok('style',['short','long','bun'])?L.style:'short',bottom:ok('bottom',['pants','skirt'])?L.bottom:'pants',tie:L.tie===true,
+      shirt:ok('shirt',SWATCH.shirt)?L.shirt:'#3D6FD9',pants:ok('pants',SWATCH.pants)?L.pants:'#2F3A55',hair:ok('hair',SWATCH.hair)?L.hair:'#2B1B12',skin:ok('skin',SWATCH.skin)?L.skin:'#F1C7A3'};
+  }
+  return f;
+}
+function readBackup(code){
+  try{
+    code=String(code||'').replace(/\s+/g,'');
+    if(!code.startsWith('DMSAVE1.')) return {err:BK.bad};
+    const p=JSON.parse(decodeURIComponent(escape(atob(code.slice(8)))));
+    if(!p||p.v!==1||typeof p.d!=='string'||bkHash(p.d)!==p.c) return {err:BK.bad};
+    if(p.lang!==BK_LANG) return {err:BK.wrongLang};
+    const st=sanitizeState(JSON.parse(p.d));
+    return st?{state:st}:{err:BK.bad};
+  }catch(e){ return {err:BK.bad}; }
+}
+function copyText(ta){
+  const done=()=>toast(BK.copied), fail=()=>{ ta.focus(); ta.select(); toast(BK.copyFail); };
+  ta.select();
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(ta.value).then(done,()=>{ try{ document.execCommand('copy')?done():fail(); }catch(e){ fail(); } });
+  else { try{ document.execCommand('copy')?done():fail(); }catch(e){ fail(); } }
+}
+function showBackupCode(){
+  const code=makeBackup();
+  showModal({title:BK.makeTitle, body:el=>{
+    const ta=h('textarea',{class:'bk-code',readonly:'readonly','aria-label':BK.makeTitle}); ta.value=code;
+    el.append(h('p',{},BK.makeNote), ta, h('div',{class:'dev-row'},
+      h('button',{type:'button',class:'btn primary',onclick:()=>copyText(ta)},BK.copy),
+      h('button',{type:'button',class:'btn',onclick:()=>{ try{ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([code],{type:'text/plain'})); a.download=`corporate-life-backup-${(S.name||'save').replace(/[^\w\-]+/g,'_')}-${todayStr()}.txt`; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },500); }catch(e){} }},BK.dl)));
+  }, actions:[{label:BK.close,primary:true}]});
+}
+function showRestore(){
+  let ta, err;
+  showModal({title:BK.restoreTitle, body:(el,close)=>{
+    ta=h('textarea',{class:'bk-code',placeholder:BK.paste,'aria-label':BK.paste});
+    err=h('div',{class:'inline-err','aria-live':'polite'});
+    const file=h('input',{type:'file',accept:'.txt,.json,text/plain',class:'bk-file','aria-label':BK.file});
+    file.addEventListener('change',()=>{ const fl=file.files&&file.files[0]; if(!fl) return; const r=new FileReader(); r.onload=()=>{ ta.value=String(r.result||'').trim(); }; r.readAsText(fl); });
+    el.append(h('p',{},BK.restoreNote), ta, h('label',{class:'bk-file'},BK.file+': ',file), err,
+      h('div',{class:'actions'},
+        h('button',{type:'button',class:'btn',onclick:()=>close()},BK.cancel),
+        h('button',{type:'button',class:'btn primary',onclick:()=>{
+          const res=readBackup(ta.value);
+          if(res.err){ err.textContent=res.err; return; }
+          S=res.state; save(); toast(BK.done); close(); setTimeout(()=>location.reload(),700);
+        }},BK.apply)));
+  }, actions:[]});
+}
+function backupSection(){
+  return h('div',{class:'bk'},h('h3',{},BK.sec),h('p',{},BK.note),h('div',{class:'dev-row'},
+    h('button',{type:'button',class:'btn primary',onclick:showBackupCode},BK.make),
+    h('button',{type:'button',class:'btn',onclick:showRestore},BK.restore)));
+}
+$('homeRestore').textContent=BK.homeLink;
+$('homeRestore').addEventListener('click',showRestore);
+
+/* ---------- Đồng hồ ngày làm việc, nhờ vả, mini-game mới ---------- */
+let dayEnding=false, reqTimer=6;
+function fmtClock(){ const m=8*60+Math.floor((S.clock||0)/DAY_SECONDS*540); return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'); }
+function renderClock(){
+  if(!$('clockVal')||!S.day) return;
+  $('clockVal').textContent=fmtClock();
+  $('clockDay').textContent=TX.clockSmall(S.dayNo,S.day.doneCount||0);
+  $('clockChip').classList.toggle('late',DAY_SECONDS-(S.clock||0)<=45);
+}
+function activeReqs(){ return actors.filter(a=>a.req); }
+function setReq(a,req){ a.req=req; const m=a.el.querySelector('.reqmark'); if(m) m.setAttribute('opacity',req?'1':'0'); }
+function spawnReq(){
+  const pool=actors.filter(a=>a.npcId&&!a.boss&&!a.req&&!a.talking&&REQS[ROOMS[a.homeRoom].id]);
+  if(!pool.length) return;
+  const a=pick(pool); setReq(a,pick(REQS[ROOMS[a.homeRoom].id]));
+  renderRoomBar(); renderSheet();
+}
+async function endDay(){
+  if(dayEnding) return; dayEnding=true;
+  try{
+    const done=S.day.doneCount||0, ok=!!S.day.counted;
+    await showModal({kicker:TX.dayEndKicker(S.dayNo),title:TX.dayEndTitle,body:TX.dayEndBody(done,ok,S.days,nextLevel()),actions:[{label:TX.nextDay,primary:true}],dismissible:false});
+    S.dayNo=(S.dayNo||1)+1; S.clock=0;
+    const before=S.energy; S.energy=Math.min(MAX_ENERGY,S.energy+NEW_DAY_ENERGY);
+    S.day=null; ensureDay();
+    actors.forEach(a=>{ if(a.req) setReq(a,null); });
+    sel={type:'task',id:null};
+    save(); render(); toast(TX.newDay(S.dayNo,S.energy-before));
+  } finally { dayEnding=false; }
+  await checkMilestones();
+}
+setInterval(()=>{
+  if(document.hidden || !$('home').hidden) return;
+  if(!dayEnding){
+    S.clock=Math.min(DAY_SECONDS,(S.clock||0)+1);
+    if(S.clock%5===0) save();
+    renderClock();
+    if(S.clock>=DAY_SECONDS && !busy && !document.querySelector('.overlay')) endDay();
+  }
+  reqTimer-=1;
+  if(reqTimer<=0){ reqTimer=10+rand(12); if(activeReqs().length<3) spawnReq(); }
+},1000);
+async function openRequest(a){
+  const v=await showModal({kicker:TX.sideKicker,title:a.label,body:el=>{
+    el.append(h('div',{class:'talk-head'},h('div',{class:'talk-face',html:`<svg viewBox="-17 -44 34 40">${personSVG(0,0,a.look)}</svg>`}),h('p',{class:'talk-say'},`“${pick(TX.reqSay)}”`)),
+      h('p',{class:'talk-res'},'🙋 '+TX.reqAsk(a.name,a.req.t)));
+  },actions:[{label:TX.reqChat,value:'chat'},{label:TX.reqLater,value:'later'},{label:TX.reqHelp,primary:true,value:'help'}]});
+  if(v==='chat') return openTalk(a);
+  if(v!=='help'||!a.req) return;
+  const req=a.req;
+  const res=await playMinigame({id:'side',title:TX.reqAsk(a.name,req.t),dept:ROOMS[a.homeRoom].id,diff:'easy',game:req.g,variant:req.v,icon:'🙋',side:true,who:a.label});
+  setReq(a,null);
+  if(res&&res.win){ S.coins+=2; S.earned+=2; S.energy=Math.min(MAX_ENERGY,S.energy+1); S.day.reqDone=(S.day.reqDone||0)+1; toast(TX.reqWin(a.name)); }
+  else { S.energy=Math.max(0,S.energy-1); toast(TX.reqFail(a.name)); }
+  save(); render();
+}
+function renderReqDetail(){
+  const list=activeReqs();
+  detailShell('🙋',TX.reqTitle,TX.reqDesc(list.length),null,null);
+  if(!list.length) return;
+  const box=h('div',{class:'req-list'});
+  list.forEach(a=>box.append(h('div',{class:'req-item'},h('span',{},`${a.label}: ${a.req.t}`),h('button',{type:'button',onclick:()=>talkTo(a)},TX.reqGo))));
+  $('detail').append(box);
+}
+const MSG=(who,html)=>h('div',{class:'msg'},h('div',{class:'who'},who),h('div',{html}));
+const LEAD=txt=>h('p',{class:'lead',style:'font-size:13px;margin:0 0 8px'},txt);
+Object.assign(MINIGAMES,{
+  sort(root,ctx,t){
+    const M=TX.mg.sort, v=t.variant||'docs', K=M[v]||M.docs;
+    const range=(a,b)=>Array.from({length:b-a+1},(_,i)=>a+i);
+    let items;
+    if(v==='cv') items=shuffle(range(1,28)).slice(0,6).map(d=>({k:d,l:K.label(pick(M.names),d)}));
+    else items=shuffle(v==='contract'?range(100,999):range(1,30)).slice(0,6).map(n=>({k:n,l:K.label(n)}));
+    const order=items.slice().sort((a,b)=>a.k-b.k); let idx=0;
+    root.append(MSG(t.who||K.who,K.say),LEAD(M.instr));
+    const grid=h('div',{class:'sortgrid'});
+    shuffle(items).forEach(it=>{ const b=h('button',{type:'button',class:'sortcard',onclick:()=>{
+      if(ctx.ended||b.disabled) return;
+      if(it===order[idx]){ idx++; b.disabled=true; b.classList.add('ok'); b.append(h('span',{class:'no'},String(idx))); if(idx===order.length) ctx.win(); }
+      else ctx.fail(M.wrong(it.l,order[idx].l));
+    }},'📄 '+it.l); grid.append(b); });
+    root.append(grid); ctx.startTimer(t.side?30:25);
+  },
+  typo(root,ctx,t){
+    const M=TX.mg.typo, v=M.items[t.variant]?t.variant:'caption', text=pick(M.items[v]);
+    const toks=text.split(' ').map(w=>({bad:w.startsWith('*'),w:w.replace(/^\*/,''),sel:false}));
+    root.append(MSG(t.who||M.who[v],M.say),LEAD(M.instr(toks.filter(x=>x.bad).length)));
+    const box=h('div',{class:'typobox'});
+    toks.forEach(tk=>{ const b=h('button',{type:'button',class:'tword','aria-pressed':'false',onclick:()=>{ tk.sel=!tk.sel; b.classList.toggle('on',tk.sel); b.setAttribute('aria-pressed',String(tk.sel)); }},tk.w); box.append(b); });
+    root.append(box,h('div',{class:'actions',style:'margin-top:10px'},h('button',{type:'button',class:'btn primary',onclick:()=>{
+      const miss=toks.filter(x=>x.bad&&!x.sel), extra=toks.filter(x=>!x.bad&&x.sel);
+      if(!miss.length&&!extra.length) ctx.win(); else ctx.fail(extra.length?M.extra(extra[0].w):M.miss(miss[0].w));
+    }},M.submit)));
+    ctx.startTimer(35);
+  },
+  schedule(root,ctx,t){
+    const M=TX.mg.sched, rel=t.variant==='release';
+    const slots=rel?M.weeks:M.slots, ppl=rel?M.parties:shuffle(M.people).slice(0,3);
+    const c=rand(slots.length);
+    const busyM=ppl.map(()=>slots.map((_,i)=>i!==c&&Math.random()<.45));
+    slots.forEach((_,i)=>{ if(i!==c&&!busyM.some(r=>r[i])) busyM[rand(ppl.length)][i]=true; });
+    root.append(MSG(t.who||(rel?M.whoRel:M.who),rel?M.sayRel:M.say),LEAD(M.instr));
+    const tb=h('table',{class:'sched'});
+    tb.append(h('tr',{},h('th',{}),...slots.map((sl,i)=>h('th',{},h('button',{type:'button',class:'slotbtn',onclick:()=>{
+      if(ctx.ended) return;
+      if(i===c) ctx.win(); else ctx.fail(M.wrong(sl,ppl.filter((_,p)=>busyM[p][i]).join(', ')));
+    }},sl)))));
+    ppl.forEach((p,pi)=>tb.append(h('tr',{},h('td',{class:'pname'},p),...slots.map((_,i)=>h('td',{class:busyM[pi][i]?'busy':'free'},busyM[pi][i]?M.busy:M.free)))));
+    root.append(h('div',{class:'sched-wrap'},tb)); ctx.startTimer(25);
+  },
+  memory(root,ctx,t){
+    const M=TX.mg.mem, n=t.variant==='boss'?4:3;
+    const order=Array.from({length:n},()=>pick(M.menu));
+    root.append(MSG(t.who||(t.variant==='boss'?M.whoBoss:M.who),M.say));
+    const info=LEAD(M.remember);
+    const show=h('div',{class:'memrow'},...order.map(o=>h('span',{class:'memchip'},o.e+' '+o.n)));
+    const got=h('div',{class:'memrow'}), menu=h('div',{class:'memmenu'});
+    root.append(info,show,got,menu);
+    let i=0;
+    const t1=setTimeout(()=>{
+      if(ctx.ended) return;
+      show.remove(); info.textContent=M.pick(n);
+      M.menu.forEach(o=>menu.append(h('button',{type:'button',class:'memopt',onclick:()=>{
+        if(ctx.ended) return;
+        if(o===order[i]){ got.append(h('span',{class:'memchip ok'},o.e+' '+o.n)); i++; if(i===n) ctx.win(); }
+        else ctx.fail(M.wrong(o.n,order[i].n,i+1));
+      }},h('span',{class:'em','aria-hidden':'true'},o.e),o.n)));
+      ctx.startTimer(20);
+    },n===4?5000:4000);
+    ctx.onCleanup(()=>clearTimeout(t1));
+  },
+  choice(root,ctx,t){
+    const M=TX.mg.choice, sc=pick(M.scen[t.variant]||M.scen.intro);
+    root.append(MSG(t.who||M.who,sc.q),LEAD(M.instr));
+    const list=h('div',{class:'choices'});
+    shuffle(sc.opts).forEach(o=>list.append(h('button',{type:'button',class:'choice',onclick:()=>{ if(ctx.ended) return; if(o.ok) ctx.win(); else ctx.fail(M.wrong(o.why)); }},o.t)));
+    root.append(list); ctx.startTimer(t.diff==='hard'?30:35);
+  },
+});
+renderClock();
 showHome();
 </script>
 <script>
